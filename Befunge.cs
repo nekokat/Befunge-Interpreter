@@ -48,63 +48,63 @@ namespace Befunge_Interpreter
         /// <summary>
         /// If char is number than push this number onto the stack.
         /// </summary>
-        private void IsNumber(char item)
+        private static void IsNumber(char item)
         {
 
         }
 
-        private void Addition()
+        private static void Addition()
         {
 
         }
 
-        private void Subtraction()
+        private static void Subtraction()
         {
 
         }
 
-        private void Multiplication()
+        private static void Multiplication()
         {
 
         }
 
-        private void Division()
+        private static void Division()
         {
 
         }
 
-        private void Modulo()
+        private static void Modulo()
         {
 
         }
 
-        private void LogicalNot()
+        private static void LogicalNot()
         {
 
         }
-        private void GreaterThan()
+        private static void GreaterThan()
         {
 
         }
 
-        private void Up()
+        private static void Up()
         {
             rows -= 1;
         }
-        private void Down()
+        private static void Down()
         {
             rows += 1;
         }
-        private void Left()
+        private static void Left()
         {
             columns -= 1;
         }
 
-        private void Rigth()
+        private static void Rigth()
         {
             columns += 1;
         }
-        private void StringMode()
+        private static void StringMode()
         {
             ASCIIMode = !ASCIIMode;
         }
