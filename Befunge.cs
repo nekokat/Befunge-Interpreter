@@ -28,16 +28,18 @@ namespace Befunge_Interpreter
 
             while (true)
             {
-                if (columns == data[0].Length)
-                {
-                    columns = 0;
-                    rows += 1;
-                }
+                columns += 1;
+
                 if (item == '@')
                 {
                     break;
                 }
 
+                if (columns == data[0].Length)
+                {
+                    columns = 0;
+                    rows += 1;
+                }
             }
 
             return string.Join("", stack);
