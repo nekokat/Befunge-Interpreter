@@ -61,41 +61,72 @@ namespace Befunge_Interpreter
         /// </summary>
         void IsNumber(char item)
         {
+            if (Char.IsNumber(item))
+                Strings.Push(item.ToString());
+            else
+                IsOperator(item);
+        }
+
+        Func<string, string> IsOperator(char item)
+        {
+            return (item) switch
+            {
+                '+' => Addition,
+                '-' => Subtraction,
+                '*' => Multiplication,
+                '/' => Division,
+                '%' => Modulo,
+                '!' => LogicalNot
+            };
+        }
+
+        void Addition(string numbera, string numberb)
+        {
+            int a = Int32.Parse(numbera);
+            int b = Int32.Parse(numberb);
+            Strings.Push($"{a + b}");
+        }
+
+        void Subtraction(string numbera, string numberb)
+        {
+            int a = Int32.Parse(numbera);
+            int b = Int32.Parse(numberb);
+            Strings.Push($"{b - a}");
 
         }
 
-        void Addition()
+        void Multiplication(string numbera, string numberb)
         {
+            int a = Int32.Parse(numbera);
+            int b = Int32.Parse(numberb);
+            Strings.Push(a == 0 ? "0" : $"{b * a}");
 
         }
 
-        void Subtraction()
+        void Division(string numbera, string numberb)
         {
-
+            int a = Int32.Parse(numbera);
+            int b = Int32.Parse(numberb);
+            Strings.Push(a == 0 ? "0" : $"{Math.Floor((double)b / a)}");
         }
 
-        void Multiplication()
+        void Modulo(string numbera, string numberb)
         {
-
+            int a = Int32.Parse(numbera);
+            int b = Int32.Parse(numberb);
+            Strings.Push(a == 0 ? "0" : $"{b % a}");
         }
 
-        void Division()
+        void LogicalNot(string numbera)
         {
-
+            Strings.Push(numbera == "0" ? "1" : "0");
         }
 
-        void Modulo()
+        void GreaterThan(string numbera, string numberb)
         {
-
-        }
-
-        void LogicalNot()
-        {
-
-        }
-        void GreaterThan()
-        {
-
+            int a = Int32.Parse(numbera);
+            int b = Int32.Parse(numberb);
+            Strings.Push(b > a ? "1" : "0");
         }
 
         void Up()
