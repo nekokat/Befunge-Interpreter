@@ -68,12 +68,7 @@ namespace Befunge_Interpreter
         {
             return (item) switch
             {
-                '+' => Addition,
-                '-' => Subtraction,
-                '*' => Multiplication,
-                '/' => Division,
-                '%' => Modulo,
-                '!' => LogicalNot,
+                //Moving
                 '>' => Rigth,
                 '<' => Left,
                 '^' => Up,
@@ -81,25 +76,37 @@ namespace Befunge_Interpreter
                 '?' => IsOperator(new char[] { '>', '<', '^', 'v' }[new Random(4).Next()]),
                 '_' => Strings.Peek() == "0" ? Rigth : Left,
                 '|' => Strings.Peek() == "0" ? Up : Down,
+                '#' => Skip,
+                //Math
+                '+' => Addition,
+                '-' => Subtraction,
+                '*' => Multiplication,
+                '/' => Division,
+                '%' => Modulo,
+                //Logical
+                '!' => LogicalNot,
+                '' => GreaterThan, 
+                //Stack
                 ':' => Duplicate,
                 '$' => Discard,
-                '#' => Skip,
                 '\\' => Swap,
+                //Constant
                 '"' => StringMode,
-                ' ' => Rigth
+                'p' => Put,
+                'g' => Get
             };;
         }
         
-        void ToStorage()
+        void Put()
         {
             Storage.Push((Col, Row));
             Data[Row].Remove(Col, 1).Insert(Col, "v");
         }
 
-        void FromStorage()
+        void Get()
         {
             (int x, int y) = Storage.Pop();
-            Data[x][y]
+            //Data[y][x];
 
 
         }
