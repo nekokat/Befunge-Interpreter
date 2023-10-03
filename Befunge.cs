@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Befunge_Interpreter
 {
@@ -14,11 +15,12 @@ namespace Befunge_Interpreter
         {
             Strings = new Stack<string>();
             ASCIIstring = new Stack<string>();
+            Storage = new Stack<(int, int)> (1);
             Row = 0;
             Col = 0;
             ASCIIMode = false;
         }
-
+        Stack<(int, int)> Storage { get; set; }
         string[] Data { get => data; set => data = value; }
         int Row { get; set; }
         int Col { get; set; }
@@ -37,14 +39,9 @@ namespace Befunge_Interpreter
 
             char item = Data[Row][Col];
 
-            while (true)
+            while (item == '@')
             {
                 Col += 1;
-
-                if (item == '@')
-                {
-                    break;
-                }
 
                 if (Col == data[0].Length)
                 {
@@ -76,8 +73,76 @@ namespace Befunge_Interpreter
                 '*' => Multiplication,
                 '/' => Division,
                 '%' => Modulo,
-                '!' => LogicalNot
-            };
+                '!' => LogicalNot,
+                '>' => Rigth,
+                '<' => Left,
+                '^' => Up,
+                'v' => Down,
+                '?' => IsOperator(new char[] { '>', '<', '^', 'v' }[new Random(4).Next()]),
+                '_' => Strings.Peek() == "0" ? Rigth : Left,
+                '|' => Strings.Peek() == "0" ? Up : Down,
+                ':' => Duplicate,
+                '$' => Discard,
+                '#' => Skip,
+                '\\' => Swap,
+                '"' => StringMode,
+                ' ' => Rigth
+            };;
+        }
+        
+        void ToStorage()
+        {
+            Storage.Push((Col, Row));
+            Data[Row].Remove(Col, 1).Insert(Col, "v");
+        }
+
+        void FromStorage()
+        {
+            (int x, int y) = Storage.Pop();
+            Data[x][y]
+
+
+        }
+
+        void Duplicate()
+        {
+            if (Strings.Count == 0)
+            {
+                Strings.Push("0");
+            }
+            else
+            {
+                Strings.Push(Strings.Peek());
+            }
+        }
+
+        void Skip()
+        {
+            Col += 1;
+        }
+
+        void Discard()
+        {
+            Strings.Pop();
+        }
+
+        void Swap()
+        {
+            string a;
+            string b;
+
+            a = Strings.Pop();
+            if (Strings.Count == 0)
+            {
+                Strings.Push("0");
+                Strings.Push(a);
+            }
+            else
+            {
+                b = Strings.Pop();
+                Strings.Push(a);
+                Strings.Push(b);
+            }
         }
 
         void Addition(string numbera, string numberb)
@@ -99,7 +164,7 @@ namespace Befunge_Interpreter
         {
             int a = Int32.Parse(numbera);
             int b = Int32.Parse(numberb);
-            Strings.Push(a == 0 ? "0" : $"{b * a}");
+            Strings.Push($"{b * a}");
 
         }
 
