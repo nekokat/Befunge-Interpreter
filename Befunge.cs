@@ -85,7 +85,7 @@ namespace Befunge_Interpreter
                 '%' => Modulo,
                 //Logical
                 '!' => LogicalNot,
-                '' => GreaterThan, 
+                '`' => GreaterThan, 
                 //Stack
                 ':' => Duplicate,
                 '$' => Discard,
@@ -152,52 +152,52 @@ namespace Befunge_Interpreter
             }
         }
 
-        void Addition(string numbera, string numberb)
+        void Addition()
         {
-            int a = Int32.Parse(numbera);
-            int b = Int32.Parse(numberb);
+            int a = Int32.Parse(Strings.Pop());
+            int b = Int32.Parse(Strings.Pop());
             Strings.Push($"{a + b}");
         }
 
-        void Subtraction(string numbera, string numberb)
+        void Subtraction()
         {
-            int a = Int32.Parse(numbera);
-            int b = Int32.Parse(numberb);
+            int a = Int32.Parse(Strings.Pop());
+            int b = Int32.Parse(Strings.Pop());
             Strings.Push($"{b - a}");
 
         }
 
-        void Multiplication(string numbera, string numberb)
+        void Multiplication()
         {
-            int a = Int32.Parse(numbera);
-            int b = Int32.Parse(numberb);
+            int a = Int32.Parse(Strings.Pop());
+            int b = Int32.Parse(Strings.Pop());
             Strings.Push($"{b * a}");
 
         }
 
-        void Division(string numbera, string numberb)
+        void Division()
         {
-            int a = Int32.Parse(numbera);
-            int b = Int32.Parse(numberb);
+            int a = Int32.Parse(Strings.Pop());
+            int b = Int32.Parse(Strings.Pop());
             Strings.Push(a == 0 ? "0" : $"{Math.Floor((double)b / a)}");
         }
 
-        void Modulo(string numbera, string numberb)
+        void Modulo()
         {
-            int a = Int32.Parse(numbera);
-            int b = Int32.Parse(numberb);
+            int a = Int32.Parse(Strings.Pop());
+            int b = Int32.Parse(Strings.Pop());
             Strings.Push(a == 0 ? "0" : $"{b % a}");
         }
 
-        void LogicalNot(string numbera)
+        void LogicalNot()
         {
-            Strings.Push(numbera == "0" ? "1" : "0");
+            Strings.Push(Strings.Pop() == "0" ? "1" : "0");
         }
 
-        void GreaterThan(string numbera, string numberb)
+        void GreaterThan()
         {
-            int a = Int32.Parse(numbera);
-            int b = Int32.Parse(numberb);
+            int a = Int32.Parse(Strings.Pop());
+            int b = Int32.Parse(Strings.Pop());
             Strings.Push(b > a ? "1" : "0");
         }
 
