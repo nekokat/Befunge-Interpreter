@@ -20,6 +20,7 @@ namespace Befunge_Interpreter
             Col = 0;
             ASCIIMode = false;
         }
+
         Stack<(int, int)> Storage { get; set; }
         string[] Data { get => data; set => data = value; }
         int Row { get; set; }
