@@ -15,7 +15,7 @@ namespace Befunge_Interpreter
         {
             Strings = new Stack<string>();
             ASCIIstring = new Stack<string>();
-            Storage = new Stack<(int, int)> (1);
+            Storage = new Stack<(int, int)> ();
             Row = 0;
             Col = 0;
             ASCIIMode = false;
@@ -39,14 +39,16 @@ namespace Befunge_Interpreter
 
             char item = Data[Row][Col];
 
-            while (item == '@')
+            while (item != '@')
             {
-                Col += 1;
-
                 if (Col == data[0].Length)
                 {
                     Col = 0;
-                    Row += 1;
+                    Row++;
+                }
+                else
+                {
+                    Col++;
                 }
             }
 
@@ -125,8 +127,7 @@ namespace Befunge_Interpreter
 
         void Skip()
         {
-            Col += 1;
-        }
+            Col++
 
         void Discard()
         {
@@ -203,20 +204,20 @@ namespace Befunge_Interpreter
 
         void Up()
         {
-            Row -= 1;
+            Row--;
         }
         void Down()
         {
-            Row += 1;
+            Row++;
         }
         void Left()
         {
-            Col -= 1;
+            Col--;
         }
 
         void Rigth()
         {
-            Col += 1;
+            Col++;
         }
         void StringMode()
         {
