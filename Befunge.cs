@@ -10,7 +10,6 @@ namespace Befunge_Interpreter
     public class BefungeInterpreter
     {
         private string[] data;
-
         public BefungeInterpreter()
         {
             Strings = new Stack<string>();
@@ -38,10 +37,12 @@ namespace Befunge_Interpreter
         {
             ToData(code);
 
-            char item = Data[Row][Col];
+            char item = Data[0][0];
 
             while (item != '@')
             {
+                item = Data[Row][Col];
+                IsNumber(item);
                 if (Col == data[0].Length)
                 {
                     Col = 0;
@@ -64,7 +65,12 @@ namespace Befunge_Interpreter
             if (Char.IsNumber(item))
                 Strings.Push(item.ToString());
             else
+                if (!ASCIIMode)
+                {
+                    ASCIIstring.Push(item.ToString());
+                }
                 IsOperator(item).Invoke();
+
         }
 
         Action IsOperator(char item)
@@ -80,6 +86,7 @@ namespace Befunge_Interpreter
                 '_' => Strings.Peek() == "0" ? Rigth : Left,
                 '|' => Strings.Peek() == "0" ? Up : Down,
                 '#' => Skip,
+                ' ' => NoOperation,
                 //Math
                 '+' => Addition,
                 '-' => Subtraction,
@@ -94,10 +101,10 @@ namespace Befunge_Interpreter
                 '$' => Discard,
                 '\\' => Swap,
                 //Constant
-                '"' => StringMode,
+                '\"' => StringMode,
                 'p' => Put,
                 'g' => Get,
-                _ => throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value {item}")
+                _ => throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
             };
         }
 
@@ -124,6 +131,8 @@ namespace Befunge_Interpreter
                 Strings.Push(Strings.Peek());
             }
         }
+
+        void NoOperation() { }
 
         void Skip()
         {
