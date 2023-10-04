@@ -63,12 +63,12 @@ namespace Befunge_Interpreter
             if (Char.IsNumber(item))
                 Strings.Push(item.ToString());
             else
-                IsOperator(item);
+                IsOperator(item).Invoke();
         }
 
-        Func<string, string> IsOperator(char item)
+        Action IsOperator(char item)
         {
-            return (item) switch
+            return item switch
             {
                 //Moving
                 '>' => Rigth,
@@ -87,7 +87,7 @@ namespace Befunge_Interpreter
                 '%' => Modulo,
                 //Logical
                 '!' => LogicalNot,
-                '`' => GreaterThan, 
+                '`' => GreaterThan,
                 //Stack
                 ':' => Duplicate,
                 '$' => Discard,
@@ -95,10 +95,11 @@ namespace Befunge_Interpreter
                 //Constant
                 '"' => StringMode,
                 'p' => Put,
-                'g' => Get
-            };;
+                'g' => Get,
+                _ => throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value {item}")
+            };
         }
-        
+
         void Put()
         {
             Storage.Push((Col, Row));
@@ -109,8 +110,6 @@ namespace Befunge_Interpreter
         {
             (int x, int y) = Storage.Pop();
             //Data[y][x];
-
-
         }
 
         void Duplicate()
@@ -127,7 +126,8 @@ namespace Befunge_Interpreter
 
         void Skip()
         {
-            Col++
+            Col++;
+        }
 
         void Discard()
         {
