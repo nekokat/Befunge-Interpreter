@@ -14,9 +14,9 @@ namespace Befunge_Interpreter
         {
             Moving = Rigth;
             Numbers = new Stack<int>();
-            Out = new Stack<string>();
             ASCIIstring = new Stack<string>();
             Storage = new Stack<(int, int)>();
+            Out = new Stack<string>();
             Row = 0;
             Col = 0;
             ASCIIMode = false;
@@ -34,14 +34,14 @@ namespace Befunge_Interpreter
 
         void ToData(string code)
         {
-            data = code.Split("\n");
+            data = code.Split("\r\n");
         }
 
         public string Interpret(string code)
         {
             ToData(code);
 
-            char item = Data[0][0];
+            char item = Data[Row][Col];
             while (item != '@')
             {
                 item = Data[Row][Col];
@@ -99,6 +99,7 @@ namespace Befunge_Interpreter
                 'g' => Get,
                 '.' => PrintN,
                 ',' => PrintA,
+                ' ' => NoOperation,
                 _ => throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
             };
         }
