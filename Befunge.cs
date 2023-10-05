@@ -12,19 +12,23 @@ namespace Befunge_Interpreter
         private string[] data;
         public BefungeInterpreter()
         {
-            Strings = new Stack<string>();
+            Moving = Rigth;
+            Numbers = new Stack<int>();
+            Out = new Stack<string>();
             ASCIIstring = new Stack<string>();
-            Storage = new Stack<(int, int)> ();
+            Storage = new Stack<(int, int)>();
             Row = 0;
             Col = 0;
             ASCIIMode = false;
         }
 
+        Action Moving { get; set; }
+        Stack<string> Out { get; set; }
         Stack<(int, int)> Storage { get; set; }
         string[] Data { get => data; set => data = value; }
         int Row { get; set; }
         int Col { get; set; }
-        Stack<string> Strings { get; set; }
+        Stack<int> Numbers { get; set; }
         Stack<string> ASCIIstring { get; set; }
         bool ASCIIMode { get; set; }
 
@@ -38,23 +42,14 @@ namespace Befunge_Interpreter
             ToData(code);
 
             char item = Data[0][0];
-
             while (item != '@')
             {
                 item = Data[Row][Col];
                 IsNumber(item);
-                if (Col == data[0].Length)
-                {
-                    Col = 0;
-                    Row++;
-                }
-                else
-                {
-                    Col++;
-                }
+                Moving.Invoke();
             }
 
-            return string.Join("", Strings);
+            return string.Join("", Out);
         }
 
         /// <summary>
@@ -62,14 +57,22 @@ namespace Befunge_Interpreter
         /// </summary>
         void IsNumber(char item)
         {
-            if (Char.IsNumber(item))
-                Strings.Push(item.ToString());
+            if (Int32.TryParse(item.ToString(), out int number))
+            {
+                Numbers.Push(number);
+            }
+            else if (ASCIIMode)
+            {
+                ASCIIstring.Push(item.ToString());
+            }
+            else if ("><^v?_|#".Contains(item))
+            {
+                SetMove(item);
+            }
             else
-                if (!ASCIIMode)
-                {
-                    ASCIIstring.Push(item.ToString());
-                }
+            {
                 IsOperator(item).Invoke();
+            }
 
         }
 
@@ -77,16 +80,6 @@ namespace Befunge_Interpreter
         {
             return item switch
             {
-                //Moving
-                '>' => Rigth,
-                '<' => Left,
-                '^' => Up,
-                'v' => Down,
-                '?' => IsOperator(new char[] { '>', '<', '^', 'v' }[new Random(4).Next()]),
-                '_' => Strings.Peek() == "0" ? Rigth : Left,
-                '|' => Strings.Peek() == "0" ? Up : Down,
-                '#' => Skip,
-                ' ' => NoOperation,
                 //Math
                 '+' => Addition,
                 '-' => Subtraction,
@@ -104,134 +97,148 @@ namespace Befunge_Interpreter
                 '\"' => StringMode,
                 'p' => Put,
                 'g' => Get,
+                '.' => PrintN,
+                ',' => PrintA,
                 _ => throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
+            };
+        }
+
+        void StringMode()
+        {
+            ASCIIMode = !ASCIIMode;
+        }
+
+        void PrintN()
+        {
+            Out.Push(Numbers.Pop().ToString());
+        }
+
+        void PrintA()
+        {
+            Out.Push(ASCIIstring.Pop());
+        }
+
+        void SetMove(char item)
+        {
+            Random random = new();
+            Moving = item switch
+            {
+                '>' => Rigth,
+                '<' => Left,
+                '^' => Up,
+                'v' => Down,
+                '?' => new Action[] { Rigth, Left, Up, Down }[random.Next(4)],
+                '_' => Numbers.Peek() == 0 ? Rigth : Left,
+                '|' => Numbers.Peek() == 0 ? Up : Down,
+                '#' => Skip,
+                _ => throw new Exception()
             };
         }
 
         void Put()
         {
             Storage.Push((Col, Row));
-            Data[Row].Remove(Col, 1).Insert(Col, "v");
+            Data[Row] = Data[Row].Remove(Col, 1).Insert(Col, "v");
         }
 
         void Get()
         {
-            (int x, int y) = Storage.Pop();
+            //(int x, int y) = Storage.Pop();
             //Data[y][x];
         }
 
         void Duplicate()
         {
-            if (Strings.Count == 0)
+            if (Numbers.Count == 0)
             {
-                Strings.Push("0");
+                Numbers.Push(0);
             }
             else
             {
-                Strings.Push(Strings.Peek());
+                Numbers.Push(Numbers.Peek());
             }
         }
 
-        void NoOperation() { }
+        void NoOperation() => Moving();
 
-        void Skip()
-        {
-            Col++;
-        }
+        void Skip() => Moving();
 
-        void Discard()
-        {
-            Strings.Pop();
-        }
+        void Discard() => Numbers.Pop();
 
         void Swap()
         {
-            string a;
-            string b;
+            int a;
+            int b;
 
-            a = Strings.Pop();
-            if (Strings.Count == 0)
+            a = Numbers.Pop();
+            if (Numbers.Count == 0)
             {
-                Strings.Push("0");
-                Strings.Push(a);
+                Numbers.Push(0);
+                Numbers.Push(a);
             }
             else
             {
-                b = Strings.Pop();
-                Strings.Push(a);
-                Strings.Push(b);
+                b = Numbers.Pop();
+                Numbers.Push(a);
+                Numbers.Push(b);
             }
         }
 
         void Addition()
         {
-            int a = Int32.Parse(Strings.Pop());
-            int b = Int32.Parse(Strings.Pop());
-            Strings.Push($"{a + b}");
+            int a = Numbers.Pop();
+            int b = Numbers.Pop();
+            Numbers.Push(a + b);
         }
 
         void Subtraction()
         {
-            int a = Int32.Parse(Strings.Pop());
-            int b = Int32.Parse(Strings.Pop());
-            Strings.Push($"{b - a}");
+            int a = Numbers.Pop();
+            int b = Numbers.Pop();
+            Numbers.Push(b - a);
 
         }
 
         void Multiplication()
         {
-            int a = Int32.Parse(Strings.Pop());
-            int b = Int32.Parse(Strings.Pop());
-            Strings.Push($"{b * a}");
+            int a = Numbers.Pop();
+            int b = Numbers.Pop();
+            Numbers.Push(b * a);
 
         }
 
         void Division()
         {
-            int a = Int32.Parse(Strings.Pop());
-            int b = Int32.Parse(Strings.Pop());
-            Strings.Push(a == 0 ? "0" : $"{Math.Floor((double)b / a)}");
+            int a = Numbers.Pop();
+            int b = Numbers.Pop();
+            Numbers.Push(a == 0 ? 0 : b / a);
         }
 
         void Modulo()
         {
-            int a = Int32.Parse(Strings.Pop());
-            int b = Int32.Parse(Strings.Pop());
-            Strings.Push(a == 0 ? "0" : $"{b % a}");
+            int a = Numbers.Pop();
+            int b = Numbers.Pop();
+            Numbers.Push(a == 0 ? 0 : b % a);
         }
 
         void LogicalNot()
         {
-            Strings.Push(Strings.Pop() == "0" ? "1" : "0");
+            Numbers.Push(Numbers.Pop() == 0 ? 1 : 0);
         }
 
         void GreaterThan()
         {
-            int a = Int32.Parse(Strings.Pop());
-            int b = Int32.Parse(Strings.Pop());
-            Strings.Push(b > a ? "1" : "0");
+            int a = Numbers.Pop();
+            int b = Numbers.Pop();
+            Numbers.Push(b > a ? 1 : 0);
         }
 
-        void Up()
-        {
-            Row--;
-        }
-        void Down()
-        {
-            Row++;
-        }
-        void Left()
-        {
-            Col--;
-        }
+        void Up() => Row--;
 
-        void Rigth()
-        {
-            Col++;
-        }
-        void StringMode()
-        {
-            ASCIIMode = !ASCIIMode;
-        }
+        void Down() => Row++;
+
+        void Left() => Col--;
+
+        void Rigth() => Col++;
     }
 }
