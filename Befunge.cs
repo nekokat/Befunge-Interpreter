@@ -9,7 +9,7 @@ namespace Befunge_Interpreter
 {
     public class BefungeInterpreter
     {
-        private string[] data;
+        private char[][] _data;
         public BefungeInterpreter()
         {
             Moving = Rigth;
@@ -25,7 +25,7 @@ namespace Befunge_Interpreter
         Action Moving { get; set; }
         Stack<string> Out { get; set; }
         Stack<(int, int)> Storage { get; set; }
-        string[] Data { get => data; set => data = value; }
+        char[][] Data { get => _data; set => _data = value; }
         int Row { get; set; }
         int Col { get; set; }
         Stack<int> Numbers { get; set; }
@@ -34,7 +34,7 @@ namespace Befunge_Interpreter
 
         void ToData(string code)
         {
-            data = code.Split("\r\n");
+            _data = code.Split("\r\n").Select(i => i.ToCharArray()).ToArray();
         }
 
         public string Interpret(string code)
@@ -49,7 +49,7 @@ namespace Befunge_Interpreter
                 Moving.Invoke();
             }
 
-            return string.Join("", Out);
+            return string.Join("", Out.Count == 0 ? ASCIIstring : Out);
         }
 
         /// <summary>
@@ -121,14 +121,13 @@ namespace Befunge_Interpreter
 
         void SetMove(char item)
         {
-            Random random = new();
             Moving = item switch
             {
                 '>' => Rigth,
                 '<' => Left,
                 '^' => Up,
                 'v' => Down,
-                '?' => new Action[] { Rigth, Left, Up, Down }[random.Next(4)],
+                '?' => new Action[] { Rigth, Left, Up, Down }[new Random().Next(4)],
                 '_' => Numbers.Peek() == 0 ? Rigth : Left,
                 '|' => Numbers.Peek() == 0 ? Up : Down,
                 '#' => Skip,
@@ -139,7 +138,7 @@ namespace Befunge_Interpreter
         void Put()
         {
             Storage.Push((Col, Row));
-            Data[Row] = Data[Row].Remove(Col, 1).Insert(Col, "v");
+            Data[Row][Col] = 'v';
         }
 
         void Get()
@@ -234,12 +233,12 @@ namespace Befunge_Interpreter
             Numbers.Push(b > a ? 1 : 0);
         }
 
-        void Up() => Row--;
+        void Up() => Row = (Data.Length + Row - 1) % Data.Length;
 
-        void Down() => Row++;
+        void Down() => Row = (Row+1)%Data.Length;
 
-        void Left() => Col--;
+        void Left() => Col = (Col-1 + Data[Row].Length) % Data[Row].Length;
 
-        void Rigth() => Col++;
+        void Rigth() => Col = (Col+1) % Data[Row].Length;
     }
 }
