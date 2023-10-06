@@ -46,9 +46,11 @@ namespace Befunge_Interpreter
             {
                 item = Data[Row][Col];
                 IsNumber(item);
+                Moving.Invoke();
             }
 
-            return string.Join("", Out.Count == 0 ? ASCIIstring.Count == 0 ? Numbers.Count == 0 ? "" : Numbers : ASCIIstring : Out);
+            string output = Out.Count == 0 ? ASCIIstring.Count == 0 ? Numbers.Count == 0 ? "" : string.Join("", Numbers) : string.Join("", ASCIIstring) : string.Join("", Out);
+            return new string(output.Reverse().ToArray());
         }
 
         /// <summary>
@@ -56,11 +58,15 @@ namespace Befunge_Interpreter
         /// </summary>
         void IsNumber(char item)
         {
-            if (Int32.TryParse(item.ToString(), out int number))
+            if (item == '"')
+            {
+                StringMode();
+            }
+            else if (Int32.TryParse(item.ToString(), out int number))
             {
                 Numbers.Push(number);
             }
-            else if (ASCIIMode && item != '"')
+            else if (ASCIIMode)
             {
                 ASCIIstring.Push(item.ToString());
             }
@@ -72,8 +78,6 @@ namespace Befunge_Interpreter
             {
                 IsOperator(item).Invoke();
             }
-
-            Moving.Invoke();
         }
 
         Action IsOperator(char item)
@@ -99,7 +103,7 @@ namespace Befunge_Interpreter
                 '.' => PrintN,
                 ',' => PrintA,
                 ' ' => NoOperation,
-                '"' => StringMode,
+                '@' => NoOperation,
                 _ =>  throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
             };
         }
