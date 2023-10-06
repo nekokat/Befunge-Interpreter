@@ -46,10 +46,9 @@ namespace Befunge_Interpreter
             {
                 item = Data[Row][Col];
                 IsNumber(item);
-                Moving.Invoke();
             }
 
-            return string.Join("", Out.Count == 0 ? ASCIIstring : Out);
+            return string.Join("", Out.Count == 0 ? ASCIIstring.Count == 0 ? Numbers.Count == 0 ? "" : Numbers : ASCIIstring : Out);
         }
 
         /// <summary>
@@ -61,7 +60,7 @@ namespace Befunge_Interpreter
             {
                 Numbers.Push(number);
             }
-            else if (ASCIIMode)
+            else if (ASCIIMode && item != '"')
             {
                 ASCIIstring.Push(item.ToString());
             }
@@ -74,6 +73,7 @@ namespace Befunge_Interpreter
                 IsOperator(item).Invoke();
             }
 
+            Moving.Invoke();
         }
 
         Action IsOperator(char item)
@@ -94,13 +94,13 @@ namespace Befunge_Interpreter
                 '$' => Discard,
                 '\\' => Swap,
                 //Constant
-                '\"' => StringMode,
                 'p' => Put,
                 'g' => Get,
                 '.' => PrintN,
                 ',' => PrintA,
                 ' ' => NoOperation,
-                _ => throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
+                '"' => StringMode,
+                _ =>  throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
             };
         }
 
@@ -186,9 +186,7 @@ namespace Befunge_Interpreter
 
         void Addition()
         {
-            int a = Numbers.Pop();
-            int b = Numbers.Pop();
-            Numbers.Push(a + b);
+            Numbers.Push(Numbers.Pop() + Numbers.Pop());
         }
 
         void Subtraction()
@@ -201,10 +199,7 @@ namespace Befunge_Interpreter
 
         void Multiplication()
         {
-            int a = Numbers.Pop();
-            int b = Numbers.Pop();
-            Numbers.Push(b * a);
-
+            Numbers.Push(Numbers.Pop() * Numbers.Pop());
         }
 
         void Division()
