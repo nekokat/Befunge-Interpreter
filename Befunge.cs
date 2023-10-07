@@ -17,8 +17,7 @@ namespace Befunge_Interpreter
             Out = new Stack<object>();
             Row = 0;
             Col = 0;
-            ASCIIMode = false;
-       
+            ASCIIMode = false;       
         }
 
         Action Moving { get; set; }
