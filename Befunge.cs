@@ -2,54 +2,61 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Befunge_Interpreter
 {
     public class BefungeInterpreter
     {
         private char[][] _data;
+        private string _code;
         public BefungeInterpreter()
         {
             Moving = Rigth;
-            Numbers = new Stack<int>();
-            ASCIIstring = new Stack<string>();
             Storage = new Stack<(int, int)>();
-            Out = new Stack<string>();
+            Out = new Stack<object>();
             Row = 0;
             Col = 0;
             ASCIIMode = false;
         }
 
         Action Moving { get; set; }
-        Stack<string> Out { get; set; }
+        Stack<object> Out { get; set; }
         Stack<(int, int)> Storage { get; set; }
         char[][] Data { get => _data; set => _data = value; }
         int Row { get; set; }
         int Col { get; set; }
-        Stack<int> Numbers { get; set; }
-        Stack<string> ASCIIstring { get; set; }
         bool ASCIIMode { get; set; }
 
+        /// <summary>
+        /// Converting program code to a character set
+        /// </summary>
+        /// <param name="code">executable instructions</param>
         void ToData(string code)
         {
+            _code = code;
             _data = code.Split("\r\n").Select(i => i.ToCharArray()).ToArray();
         }
 
+        /// <summary>
+        /// Interpreting program code
+        /// </summary>
+        /// <param name="code">executable instructions</param>
+        /// <returns>stack data as a string</returns>
         public string Interpret(string code)
         {
             ToData(code);
 
             char item = Data[Row][Col];
-            while (item != '@')
+            while (true)
             {
                 item = Data[Row][Col];
+                //End program
+                if (item == '@') { break; }
                 IsNumber(item);
                 Moving.Invoke();
             }
 
-            string output = Out.Count == 0 ? ASCIIstring.Count == 0 ? Numbers.Count == 0 ? "" : string.Join("", Numbers) : string.Join("", ASCIIstring) : string.Join("", Out);
+            string output = Out.Count == 0 ? "" : string.Join("", Out);
             return new string(output.Reverse().ToArray());
         }
 
@@ -58,17 +65,17 @@ namespace Befunge_Interpreter
         /// </summary>
         void IsNumber(char item)
         {
-            if (item == '"')
+            if (item == '\"')
             {
                 StringMode();
             }
             else if (Int32.TryParse(item.ToString(), out int number))
             {
-                Numbers.Push(number);
+                Out.Push(number);
             }
             else if (ASCIIMode)
             {
-                ASCIIstring.Push(item.ToString());
+                Out.Push(item.ToString());
             }
             else if ("><^v?_|#".Contains(item))
             {
@@ -103,26 +110,39 @@ namespace Befunge_Interpreter
                 '.' => PrintN,
                 ',' => PrintA,
                 ' ' => NoOperation,
-                '@' => NoOperation,
                 _ =>  throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
             };
         }
 
+        /// <summary>
+        /// Start string mode: push each character's ASCII value all the way up to the next "
+        /// </summary>
         void StringMode()
         {
             ASCIIMode = !ASCIIMode;
         }
 
+        /// <summary>
+        /// Pop value and output as an integer followed by a space
+        /// </summary>
         void PrintN()
         {
-            Out.Push(Numbers.Pop().ToString());
+            Out.Push(Out.Pop().ToString());
         }
 
+        /// <summary>
+        /// Pop value and output as ASCII character
+        /// </summary>
         void PrintA()
         {
-            Out.Push(ASCIIstring.Pop());
+            Out.Push(Out.Pop());
         }
 
+        /// <summary>
+        /// Changing the direction of movement of the carriage
+        /// </summary>
+        /// <param name="item"></param>
+        /// <exception cref="Exception"></exception>
         void SetMove(char item)
         {
             Moving = item switch
@@ -131,113 +151,175 @@ namespace Befunge_Interpreter
                 '<' => Left,
                 '^' => Up,
                 'v' => Down,
+                //Start moving in a random cardinal direction
                 '?' => new Action[] { Rigth, Left, Up, Down }[new Random().Next(4)],
-                '_' => Numbers.Peek() == 0 ? Rigth : Left,
-                '|' => Numbers.Peek() == 0 ? Up : Down,
+                //Pop a value; move right if value=0, left otherwise
+                '_' => (int)Out.Pop() == 0 ? Rigth : Left,
+                //Pop a value; move down if value=0, up otherwise
+                '|' => (int)Out.Pop() == 0 ? Up : Down,
+                //Bridge: Skip next cell
                 '#' => Skip,
                 _ => throw new Exception()
             };
         }
 
+        /// <summary>
+        /// A "put" call (a way to store a value for later use). Pop y, x, and v,
+        /// then change the character at (x,y)
+        /// in the program to the character with ASCII value v
+        /// </summary>
         void Put()
         {
             Storage.Push((Col, Row));
             Data[Row][Col] = 'v';
         }
 
+        /// <summary>
+        /// A "get" call (a way to retrieve data in storage). Pop y and x,
+        /// then push ASCII value of the character at that position in the program
+        /// </summary>
         void Get()
         {
+            //TODO: Create: Get
             //(int x, int y) = Storage.Pop();
             //Data[y][x];
         }
 
+        /// <summary>
+        /// Duplicate value on top of the stack
+        /// </summary>
         void Duplicate()
         {
-            if (Numbers.Count == 0)
+            if (Out.Count == 0)
             {
-                Numbers.Push(0);
+                Out.Push(0);
             }
             else
             {
-                Numbers.Push(Numbers.Peek());
+                Out.Push(Out.Peek());
             }
         }
 
-        void NoOperation() => Moving();
+        /// <summary>
+        /// No-op. Does nothing
+        /// </summary>
+        void NoOperation() => Console.WriteLine("No Operation");
 
+        /// <summary>
+        /// Bridge: Skip next cell
+        /// </summary>
         void Skip() => Moving();
 
-        void Discard() => Numbers.Pop();
+        /// <summary>
+        /// Pop value from the stack and discard it
+        /// </summary>
+        void Discard() => Out.Pop();
 
+        /// <summary>
+        /// Swap two values on top of the stack
+        /// </summary>
         void Swap()
         {
             int a;
             int b;
 
-            a = Numbers.Pop();
-            if (Numbers.Count == 0)
+            a = (int)Out.Pop();
+            if (Out.Count == 0)
             {
-                Numbers.Push(0);
-                Numbers.Push(a);
+                Out.Push(0);
+                Out.Push(a);
             }
             else
             {
-                b = Numbers.Pop();
-                Numbers.Push(a);
-                Numbers.Push(b);
+                b = (int)Out.Pop();
+                Out.Push(a);
+                Out.Push(b);
             }
         }
 
+        /// <summary>
+        /// Addition: Pop a and b, then push a+b
+        /// </summary>
         void Addition()
         {
-            Numbers.Push(Numbers.Pop() + Numbers.Pop());
+            Out.Push((int)Out.Pop() + (int)Out.Pop());
         }
 
+        /// <summary>
+        /// Subtraction: Pop a and b, then push b-a
+        /// </summary>
         void Subtraction()
         {
-            int a = Numbers.Pop();
-            int b = Numbers.Pop();
-            Numbers.Push(b - a);
+            int a = (int)Out.Pop();
+            int b = (int)Out.Pop();
+            Out.Push(b - a);
 
         }
 
+        /// <summary>
+        /// Multiplication: Pop a and b, then push a*b
+        /// </summary>
         void Multiplication()
         {
-            Numbers.Push(Numbers.Pop() * Numbers.Pop());
+            Out.Push((int)Out.Pop() * (int)Out.Pop());
         }
 
+        /// <summary>
+        /// Integer division: Pop a and b, then push b/a, rounded towards 0.
+        /// </summary>
         void Division()
         {
-            int a = Numbers.Pop();
-            int b = Numbers.Pop();
-            Numbers.Push(a == 0 ? 0 : b / a);
+            int a = (int)Out.Pop();
+            int b = (int)Out.Pop();
+            Out.Push(a == 0 ? 0 : b / a);
         }
 
+        /// <summary>
+        /// Modulo: Pop a and b, then push the remainder of the integer division of b/a.
+        /// </summary>
         void Modulo()
         {
-            int a = Numbers.Pop();
-            int b = Numbers.Pop();
-            Numbers.Push(a == 0 ? 0 : b % a);
+            int a = (int)Out.Pop();
+            int b = (int)Out.Pop();
+            Out.Push(a == 0 ? 0 : b % a);
         }
 
+        /// <summary>
+        /// Logical NOT: Pop a value. If the value is zero, push 1; otherwise, push zero.
+        /// </summary>
         void LogicalNot()
         {
-            Numbers.Push(Numbers.Pop() == 0 ? 1 : 0);
+            Out.Push((int)Out.Pop() == 0 ? 1 : 0);
         }
 
+        /// <summary>
+        /// Greater than: Pop a and b, then push 1 if b>a, otherwise zero.
+        /// </summary>
         void GreaterThan()
         {
-            int a = Numbers.Pop();
-            int b = Numbers.Pop();
-            Numbers.Push(b > a ? 1 : 0);
+            int a = (int)Out.Pop();
+            int b = (int)Out.Pop();
+            Out.Push(b > a ? 1 : 0);
         }
 
+        /// <summary>
+        /// Start moving up
+        /// </summary>
         void Up() => Row = (Data.Length + Row - 1) % Data.Length;
 
+        /// <summary>
+        /// Start moving down
+        /// </summary>
         void Down() => Row = (Row+1)%Data.Length;
 
+        /// <summary>
+        /// Start moving left
+        /// </summary>
         void Left() => Col = (Col-1 + Data[Row].Length) % Data[Row].Length;
 
+        /// <summary>
+        /// Start moving right
+        /// </summary>
         void Rigth() => Col = (Col+1) % Data[Row].Length;
     }
 }
