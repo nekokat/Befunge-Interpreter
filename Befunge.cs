@@ -8,7 +8,8 @@ namespace Befunge_Interpreter
     public class BefungeInterpreter
     {
         private char[][] _data;
-        private string _code;
+        string _code;
+
         public BefungeInterpreter()
         {
             Moving = Rigth;
@@ -17,6 +18,7 @@ namespace Befunge_Interpreter
             Row = 0;
             Col = 0;
             ASCIIMode = false;
+       
         }
 
         Action Moving { get; set; }
@@ -127,7 +129,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void PrintN()
         {
-            Out.Push(Out.Pop().ToString());
+            Console.Out.Write(Out.Pop().ToString());
         }
 
         /// <summary>
@@ -135,7 +137,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void PrintA()
         {
-            Out.Push(Out.Pop());
+            Console.Out.Write(Out.Pop());
         }
 
         /// <summary>
@@ -203,7 +205,7 @@ namespace Befunge_Interpreter
         /// <summary>
         /// No-op. Does nothing
         /// </summary>
-        void NoOperation() => Console.WriteLine("No Operation");
+        void NoOperation() => Console.Out.Write('\0');
 
         /// <summary>
         /// Bridge: Skip next cell

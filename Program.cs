@@ -9,7 +9,7 @@ class Program
 
         using (StreamWriter sw = new StreamWriter("befunge_output.txt"))
         {
-            new BefungeInterpreter().Interpret(">987v>.v\r\nv456<  :\r\n>321 ^ _@");
+            new BefungeInterpreter().Interpret("\"!dlroW olleH\">:#,_@");
         }
     }
 }
