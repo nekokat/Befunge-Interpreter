@@ -46,6 +46,9 @@ namespace Befunge_Interpreter
         public string Interpret(string code)
         {
             ToData(code);
+            StringWriter output = new();
+
+            Console.SetOut(output);
 
             char item = Data[Row][Col];
             while (true)
@@ -57,8 +60,9 @@ namespace Befunge_Interpreter
                 Moving.Invoke();
             }
 
-            string output = Out.Count == 0 ? "" : string.Join("", Out);
-            return new string(output.Reverse().ToArray());
+            Console.Out.Close();
+            output.Close();
+            return output.ToString();
         }
 
         /// <summary>
@@ -204,7 +208,7 @@ namespace Befunge_Interpreter
         /// <summary>
         /// No-op. Does nothing
         /// </summary>
-        void NoOperation() => Console.Out.Write('\0');
+        void NoOperation() => Console.Out.Write(string.Empty);
 
         /// <summary>
         /// Bridge: Skip next cell

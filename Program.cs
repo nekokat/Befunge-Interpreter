@@ -5,11 +5,12 @@ class Program
 {
     static void Main(string[] args)
     {
-        using (StreamWriter sw = new StreamWriter("./befunge_output.txt"))
-        {
-            //Console.SetOut(sw);
-            new BefungeInterpreter().Interpret(">987v>.v\nv456<  :\n>321 ^ _@");
-            //Console.Out.Close();
-        }
+
+        StreamWriter sw = new("befunge_output.txt");
+        Console.SetOut(sw);
+        Console.Out.Write(new BefungeInterpreter().Interpret(">987v>.v\r\nv456<  :\r\n>321 ^ _@"));
+        Console.Out.Close();
+        sw.Close();
+        
     }
 }
