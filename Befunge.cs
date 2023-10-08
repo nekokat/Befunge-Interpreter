@@ -50,14 +50,13 @@ namespace Befunge_Interpreter
 
             Console.SetOut(output);
 
-            char item = Data[Row][Col];
-            while (true)
+            char item = Data[0][0];
+
+            while (item != '@')
             {
-                item = Data[Row][Col];
-                //End program
-                if (item == '@') { break; }
                 IsNumber(item);
                 Moving.Invoke();
+                item = Data[Row][Col];
             }
 
             Console.Out.Close();
