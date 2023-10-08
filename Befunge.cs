@@ -23,7 +23,6 @@ namespace Befunge_Interpreter
         StringBuilder Output { get; set; }
         Action Moving { get; set; }
         public Stack<int> OutputStack { get; set; }
-        Stack<(int, int)> Storage { get; set; }
         char[][] Data { get => _data; set => _data = value; }
         int Row { get; set; }
         int Col { get; set; }
@@ -33,7 +32,7 @@ namespace Befunge_Interpreter
         /// Converting program code to a character set
         /// </summary>
         /// <param name="code">executable instructions</param>
-        void ToData(string code)
+        void Parse(string code)
         {
             _code = code;
             _data = code.Split("\r\n").Select(i => i.ToCharArray()).ToArray();
@@ -46,13 +45,13 @@ namespace Befunge_Interpreter
         /// <returns>stack data as a string</returns>
         public string Interpret(string code)
         {
-            ToData(code);
+            Parse(code);
 
             char item = Data[0][0];
 
             while (item != '@')
             {
-                IsNumber(item);
+                Run(item);
                 Moving.Invoke();
                 item = Data[Row][Col];
                 // Bridge: Skip next cell
@@ -70,11 +69,12 @@ namespace Befunge_Interpreter
         /// <summary>
         /// If char is number than push this number onto the stack.
         /// </summary>
-        void IsNumber(char item)
+        void Run(char item)
         {
             if (item == '\"')
             {
-                StringMode();
+                // Start string mode: push each character's ASCII value all the way up to the next "
+                ASCIIMode = !ASCIIMode;
             }
             else if (Int32.TryParse(item.ToString(), out int number))
             {
@@ -90,11 +90,11 @@ namespace Befunge_Interpreter
             }
             else
             {
-                IsOperator(item).Invoke();
+                Operator(item).Invoke();
             }
         }
 
-        Action IsOperator(char item)
+        Action Operator(char item)
         {
             return item switch
             {
@@ -114,19 +114,13 @@ namespace Befunge_Interpreter
                 //Constant
                 'p' => Put,
                 'g' => Get,
+                //Printing
                 '.' => PrintN,
                 ',' => PrintA,
+
                 ' ' => NoOperation,
                 _ =>  throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
             };
-        }
-
-        /// <summary>
-        /// Start string mode: push each character's ASCII value all the way up to the next "
-        /// </summary>
-        void StringMode()
-        {
-            ASCIIMode = !ASCIIMode;
         }
 
         /// <summary>
@@ -142,7 +136,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void PrintA()
         {
-            Output.Append((char)OutputStack.Pop());
+            Output.Append(Convert.ToChar(OutputStack.Pop()));
         }
 
         /// <summary>
@@ -163,7 +157,7 @@ namespace Befunge_Interpreter
                 //Pop a value; move right if value=0, left otherwise
                 '_' => OutputStack.Pop() == 0 ? Rigth : Left,
                 //Pop a value; move down if value=0, up otherwise
-                '|' => OutputStack.Pop() == 0 ? Up : Down,
+                '|' => OutputStack.Pop() == 0 ? Down : Up,
                 _ => throw new Exception()
             };
         }
@@ -198,14 +192,8 @@ namespace Befunge_Interpreter
         /// </summary>
         void Duplicate()
         {
-            if (OutputStack.Count == 0)
-            {
-                OutputStack.Push(0);
-            }
-            else
-            {
-                OutputStack.Push(OutputStack.Peek());
-            }
+            int value = OutputStack.Count == 0 ? 0 : OutputStack.Peek();
+            OutputStack.Push(value);
         }
 
         /// <summary>
@@ -215,13 +203,6 @@ namespace Befunge_Interpreter
         {
             Output.Append(string.Empty);
         }
-
-        /*
-        /// <summary>
-        /// Bridge: Skip next cell
-        /// </summary>
-        void Skip() => Moving.Invoke();
-        */
 
         /// <summary>
         /// Pop value from the stack and discard it
@@ -233,10 +214,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void Swap()
         {
-            int a;
-            int b;
-
-            a = OutputStack.Pop();
+            int a = OutputStack.Pop();
             if (OutputStack.Count == 0)
             {
                 OutputStack.Push(0);
@@ -244,7 +222,7 @@ namespace Befunge_Interpreter
             }
             else
             {
-                b = OutputStack.Pop();
+                int b = OutputStack.Pop();
                 OutputStack.Push(a);
                 OutputStack.Push(b);
             }
@@ -255,7 +233,9 @@ namespace Befunge_Interpreter
         /// </summary>
         void Addition()
         {
-            OutputStack.Push(OutputStack.Pop() + OutputStack.Pop());
+            int a = OutputStack.Pop();
+            int b = OutputStack.Pop();
+            OutputStack.Push(a + b);
         }
 
         /// <summary>
@@ -274,7 +254,9 @@ namespace Befunge_Interpreter
         /// </summary>
         void Multiplication()
         {
-            OutputStack.Push(OutputStack.Pop() * OutputStack.Pop());
+            int a = OutputStack.Pop();
+            int b = OutputStack.Pop();
+            OutputStack.Push(a * b);
         }
 
         /// <summary>
