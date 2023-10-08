@@ -189,7 +189,7 @@ namespace Befunge_Interpreter
             int y = Out.Pop();
             int x = Out.Pop();
             char v = Data[y][x];
-            Out.Push(Int32.TryParse(v.ToString(), out int number) ? number : (int)v);
+            Out.Push((int)v);
         }
 
         /// <summary>
