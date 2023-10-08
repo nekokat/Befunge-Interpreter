@@ -9,20 +9,20 @@ namespace Befunge_Interpreter
     {
         private char[][] _data;
         string _code;
-        public event EventHandler Push;
 
         public BefungeInterpreter()
         {
             Moving = Rigth;
-            Storage = new Stack<(int, int)>();
-            Out = new Stack<int>();
+            OutputStack = new();
             Row = 0;
             Col = 0;
-            ASCIIMode = false;       
+            ASCIIMode = false;
+            Output = new();
         }
 
+        StringBuilder Output { get; set; }
         Action Moving { get; set; }
-        public Stack<int> Out { get; set; }
+        public Stack<int> OutputStack { get; set; }
         Stack<(int, int)> Storage { get; set; }
         char[][] Data { get => _data; set => _data = value; }
         int Row { get; set; }
@@ -47,9 +47,6 @@ namespace Befunge_Interpreter
         public string Interpret(string code)
         {
             ToData(code);
-            StringWriter output = new();
-
-            Console.SetOut(output);
 
             char item = Data[0][0];
 
@@ -67,9 +64,7 @@ namespace Befunge_Interpreter
                 }
             }
 
-            Console.Out.Close();
-            output.Close();
-            return output.ToString();
+            return Output.ToString();
         }
 
         /// <summary>
@@ -83,11 +78,11 @@ namespace Befunge_Interpreter
             }
             else if (Int32.TryParse(item.ToString(), out int number))
             {
-                Out.Push(number);
+                OutputStack.Push(number);
             }
             else if (ASCIIMode)
             {
-                Out.Push((int)item);
+                OutputStack.Push((int)item);
             }
             else if ("><^v?_|".Contains(item))
             {
@@ -139,8 +134,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void PrintN()
         {
-            Push?.Invoke(this, EventArgs.Empty);
-            Console.Out.Write(Out.Pop());            
+            Output.Append(OutputStack.Pop());            
         }
 
         /// <summary>
@@ -148,7 +142,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void PrintA()
         {
-            Console.Out.Write((char)Out.Pop());
+            Output.Append((char)OutputStack.Pop());
         }
 
         /// <summary>
@@ -167,9 +161,9 @@ namespace Befunge_Interpreter
                 //Start moving in a random cardinal direction
                 '?' => new Action[] { Rigth, Left, Up, Down }[new Random().Next(4)],
                 //Pop a value; move right if value=0, left otherwise
-                '_' => Out.Pop() == 0 ? Rigth : Left,
+                '_' => OutputStack.Pop() == 0 ? Rigth : Left,
                 //Pop a value; move down if value=0, up otherwise
-                '|' => Out.Pop() == 0 ? Up : Down,
+                '|' => OutputStack.Pop() == 0 ? Up : Down,
                 _ => throw new Exception()
             };
         }
@@ -181,10 +175,10 @@ namespace Befunge_Interpreter
         /// </summary>
         void Put()
         {
-            int y = Out.Pop();
-            int x = Out.Pop();
-            int v = Out.Pop();
-            Data[x][y] = Convert.ToChar(v);
+            int y = OutputStack.Pop();
+            int x = OutputStack.Pop();
+            int v = OutputStack.Pop();
+            Data[y][x] = Convert.ToChar(v);
         }
 
         /// <summary>
@@ -193,10 +187,10 @@ namespace Befunge_Interpreter
         /// </summary>
         void Get()
         {
-            int y = Out.Pop();
-            int x = Out.Pop();
+            int y = OutputStack.Pop();
+            int x = OutputStack.Pop();
             char v = Data[y][x];
-            Out.Push((int)v);
+            OutputStack.Push((int)v);
         }
 
         /// <summary>
@@ -204,20 +198,23 @@ namespace Befunge_Interpreter
         /// </summary>
         void Duplicate()
         {
-            if (Out.Count == 0)
+            if (OutputStack.Count == 0)
             {
-                Out.Push(0);
+                OutputStack.Push(0);
             }
             else
             {
-                Out.Push(Out.Peek());
+                OutputStack.Push(OutputStack.Peek());
             }
         }
 
         /// <summary>
         /// No-op. Does nothing
         /// </summary>
-        void NoOperation() => Console.Out.Write(string.Empty);
+        void NoOperation()
+        {
+            Output.Append(string.Empty);
+        }
 
         /*
         /// <summary>
@@ -229,7 +226,7 @@ namespace Befunge_Interpreter
         /// <summary>
         /// Pop value from the stack and discard it
         /// </summary>
-        void Discard() => Out.Pop();
+        void Discard() => OutputStack.Pop();
 
         /// <summary>
         /// Swap two values on top of the stack
@@ -239,17 +236,17 @@ namespace Befunge_Interpreter
             int a;
             int b;
 
-            a = Out.Pop();
-            if (Out.Count == 0)
+            a = OutputStack.Pop();
+            if (OutputStack.Count == 0)
             {
-                Out.Push(0);
-                Out.Push(a);
+                OutputStack.Push(0);
+                OutputStack.Push(a);
             }
             else
             {
-                b = Out.Pop();
-                Out.Push(a);
-                Out.Push(b);
+                b = OutputStack.Pop();
+                OutputStack.Push(a);
+                OutputStack.Push(b);
             }
         }
 
@@ -258,7 +255,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void Addition()
         {
-            Out.Push(Out.Pop() + Out.Pop());
+            OutputStack.Push(OutputStack.Pop() + OutputStack.Pop());
         }
 
         /// <summary>
@@ -266,9 +263,9 @@ namespace Befunge_Interpreter
         /// </summary>
         void Subtraction()
         {
-            int a = Out.Pop();
-            int b = Out.Pop();
-            Out.Push(b - a);
+            int a = OutputStack.Pop();
+            int b = OutputStack.Pop();
+            OutputStack.Push(b - a);
 
         }
 
@@ -277,7 +274,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void Multiplication()
         {
-            Out.Push(Out.Pop() * Out.Pop());
+            OutputStack.Push(OutputStack.Pop() * OutputStack.Pop());
         }
 
         /// <summary>
@@ -285,9 +282,9 @@ namespace Befunge_Interpreter
         /// </summary>
         void Division()
         {
-            int a = Out.Pop();
-            int b = Out.Pop();
-            Out.Push(a == 0 ? 0 : b / a);
+            int a = OutputStack.Pop();
+            int b = OutputStack.Pop();
+            OutputStack.Push(a == 0 ? 0 : b / a);
         }
 
         /// <summary>
@@ -295,9 +292,9 @@ namespace Befunge_Interpreter
         /// </summary>
         void Modulo()
         {
-            int a = Out.Pop();
-            int b = Out.Pop();
-            Out.Push(a == 0 ? 0 : b % a);
+            int a = OutputStack.Pop();
+            int b = OutputStack.Pop();
+            OutputStack.Push(a == 0 ? 0 : b % a);
         }
 
         /// <summary>
@@ -305,7 +302,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void LogicalNot()
         {
-            Out.Push(Out.Pop() == 0 ? 1 : 0);
+            OutputStack.Push(OutputStack.Pop() == 0 ? 1 : 0);
         }
 
         /// <summary>
@@ -313,9 +310,9 @@ namespace Befunge_Interpreter
         /// </summary>
         void GreaterThan()
         {
-            int a = Out.Pop();
-            int b = Out.Pop();
-            Out.Push(b > a ? 1 : 0);
+            int a = OutputStack.Pop();
+            int b = OutputStack.Pop();
+            OutputStack.Push(b > a ? 1 : 0);
         }
 
         /// <summary>

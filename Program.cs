@@ -9,15 +9,9 @@ class Program
         StreamWriter sw = new("befunge_output.txt");
         Console.SetOut(sw);
         var k = new BefungeInterpreter();
-        k.Push += K_Push;
         Console.Out.Write(k.Interpret("2>:3g\" \"-!v\\  g30          <\r\n |!`\"O\":+1_:.:03p>03g+:\"O\"`|\r\n @               ^  p3\\\" \":<\r\n2 234567890123456789012345678901234567890123456789012345678901234567890123456789"));
         Console.Out.Close();
         sw.Close();
         
-    }
-
-    private static void K_Push(object? sender, EventArgs e)
-    {
-        Console.WriteLine(((BefungeInterpreter)sender).Out.Peek());
     }
 }
