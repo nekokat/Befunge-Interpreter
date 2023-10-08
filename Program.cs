@@ -9,7 +9,7 @@ class Program
         StreamWriter sw = new("befunge_output.txt");
         Console.SetOut(sw);
         var k = new BefungeInterpreter();
-        Console.Out.Write(k.Interpret("2>:3g\" \"-!v\\  g30          <\r\n |!`\"O\":+1_:.:03p>03g+:\"O\"`|\r\n @               ^  p3\\\" \":<\r\n2 234567890123456789012345678901234567890123456789012345678901234567890123456789"));
+        Console.Out.Write(k.Interpret("^v3:-1$$_,#! #:<\\*52\",Take one down, pass it around,\"*520     <\r\n^     >0\"elttob erom oN\">:#,_$\"s\"\\1-#v_$>0\"reeb fo \">:#,_$:2-!|\r\n>>\\:!#^_:.>0\"elttob\"    ^            >, ^\r\n^1:_@#:,,,\".\":<_v#!-3\\*25$_,#! #:<\" on the wall\"0             <\r\n^2:,,\",\"        <\r\n<v1:*9+29"));
         Console.Out.Close();
         sw.Close();
         

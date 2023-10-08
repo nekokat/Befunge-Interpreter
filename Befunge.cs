@@ -12,6 +12,7 @@ namespace Befunge_Interpreter
 
         public BefungeInterpreter()
         {
+            //TODO: Выровнять длину всез строк перед обработкой
             Moving = Rigth;
             OutputStack = new();
             Row = 0;
