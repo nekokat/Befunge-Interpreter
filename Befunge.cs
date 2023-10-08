@@ -9,6 +9,7 @@ namespace Befunge_Interpreter
     {
         private char[][] _data;
         string _code;
+        public event EventHandler Push;
 
         public BefungeInterpreter()
         {
@@ -21,7 +22,7 @@ namespace Befunge_Interpreter
         }
 
         Action Moving { get; set; }
-        Stack<int> Out { get; set; }
+        public Stack<int> Out { get; set; }
         Stack<(int, int)> Storage { get; set; }
         char[][] Data { get => _data; set => _data = value; }
         int Row { get; set; }
@@ -57,6 +58,13 @@ namespace Befunge_Interpreter
                 IsNumber(item);
                 Moving.Invoke();
                 item = Data[Row][Col];
+                // Bridge: Skip next cell
+                if (item == '#')
+                {
+                    Moving.Invoke();
+                    Moving.Invoke();
+                    item = Data[Row][Col];
+                }
             }
 
             Console.Out.Close();
@@ -81,7 +89,7 @@ namespace Befunge_Interpreter
             {
                 Out.Push((int)item);
             }
-            else if ("><^v?_|#".Contains(item))
+            else if ("><^v?_|".Contains(item))
             {
                 SetMove(item);
             }
@@ -131,7 +139,8 @@ namespace Befunge_Interpreter
         /// </summary>
         void PrintN()
         {
-            Console.Out.Write(Out.Pop());
+            Push?.Invoke(this, EventArgs.Empty);
+            Console.Out.Write(Out.Pop());            
         }
 
         /// <summary>
@@ -161,8 +170,6 @@ namespace Befunge_Interpreter
                 '_' => Out.Pop() == 0 ? Rigth : Left,
                 //Pop a value; move down if value=0, up otherwise
                 '|' => Out.Pop() == 0 ? Up : Down,
-                //Bridge: Skip next cell
-                '#' => Skip,
                 _ => throw new Exception()
             };
         }
@@ -177,7 +184,7 @@ namespace Befunge_Interpreter
             int y = Out.Pop();
             int x = Out.Pop();
             int v = Out.Pop();
-            Data[y][x] = (char)v;
+            Data[x][y] = Convert.ToChar(v);
         }
 
         /// <summary>
@@ -212,10 +219,12 @@ namespace Befunge_Interpreter
         /// </summary>
         void NoOperation() => Console.Out.Write(string.Empty);
 
+        /*
         /// <summary>
         /// Bridge: Skip next cell
         /// </summary>
-        void Skip() => Moving();
+        void Skip() => Moving.Invoke();
+        */
 
         /// <summary>
         /// Pop value from the stack and discard it
@@ -326,7 +335,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void Down() {
             Row++;
-            if(Row > Data.Length)
+            if (Row >= Data.Length)
             {
                 Row = 0;
             }
@@ -350,7 +359,8 @@ namespace Befunge_Interpreter
         void Rigth()
         {
             Col++;
-            if (Col > Data[Row].Length) {
+            if (Col >= Data[Row].Length)
+            {
                 Col = 0;
             }
 
