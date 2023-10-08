@@ -174,8 +174,10 @@ namespace Befunge_Interpreter
         /// </summary>
         void Put()
         {
-            Storage.Push((Col, Row));
-            Data[Row][Col] = 'v';
+            int y = Out.Pop();
+            int x = Out.Pop();
+            int v = Out.Pop();
+            Data[y][x] = (char)v;
         }
 
         /// <summary>
@@ -184,9 +186,10 @@ namespace Befunge_Interpreter
         /// </summary>
         void Get()
         {
-            //TODO: Create: Get
-            //(int x, int y) = Storage.Pop();
-            //Data[y][x];
+            int y = Out.Pop();
+            int x = Out.Pop();
+            char v = Data[y][x];
+            Out.Push(Int32.TryParse(v.ToString(), out int number) ? number : (int)v);
         }
 
         /// <summary>
@@ -309,21 +312,48 @@ namespace Befunge_Interpreter
         /// <summary>
         /// Start moving up
         /// </summary>
-        void Up() => Row = (Data.Length + Row - 1) % Data.Length;
+        void Up()
+        {
+            Row--;
+            if(Row < 0)
+            {
+                Row = Data.Length - 1;
+            }
+        }
 
         /// <summary>
         /// Start moving down
         /// </summary>
-        void Down() => Row = (Row+1)%Data.Length;
+        void Down() {
+            Row++;
+            if(Row > Data.Length)
+            {
+                Row = 0;
+            }
+        }
 
         /// <summary>
         /// Start moving left
         /// </summary>
-        void Left() => Col = (Col-1 + Data[Row].Length) % Data[Row].Length;
+        void Left()
+        {
+            Col--;
+            if (Col < 0)
+            {
+                Col = Data[Row].Length - 1;
+            }
+        }
 
         /// <summary>
         /// Start moving right
         /// </summary>
-        void Rigth() => Col = (Col+1) % Data[Row].Length;
+        void Rigth()
+        {
+            Col++;
+            if (Col > Data[Row].Length) {
+                Col = 0;
+            }
+
+        }
     }
 }
