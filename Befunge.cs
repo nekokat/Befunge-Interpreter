@@ -14,14 +14,14 @@ namespace Befunge_Interpreter
         {
             Moving = Rigth;
             Storage = new Stack<(int, int)>();
-            Out = new Stack<object>();
+            Out = new Stack<int>();
             Row = 0;
             Col = 0;
             ASCIIMode = false;       
         }
 
         Action Moving { get; set; }
-        Stack<object> Out { get; set; }
+        Stack<int> Out { get; set; }
         Stack<(int, int)> Storage { get; set; }
         char[][] Data { get => _data; set => _data = value; }
         int Row { get; set; }
@@ -80,7 +80,7 @@ namespace Befunge_Interpreter
             }
             else if (ASCIIMode)
             {
-                Out.Push(item.ToString());
+                Out.Push((int)item);
             }
             else if ("><^v?_|#".Contains(item))
             {
@@ -132,7 +132,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void PrintN()
         {
-            Console.Out.Write(Out.Pop().ToString());
+            Console.Out.Write(Out.Pop());
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void PrintA()
         {
-            Console.Out.Write(Out.Pop());
+            Console.Out.Write((char)Out.Pop());
         }
 
         /// <summary>
@@ -159,9 +159,9 @@ namespace Befunge_Interpreter
                 //Start moving in a random cardinal direction
                 '?' => new Action[] { Rigth, Left, Up, Down }[new Random().Next(4)],
                 //Pop a value; move right if value=0, left otherwise
-                '_' => (int)Out.Pop() == 0 ? Rigth : Left,
+                '_' => Out.Pop() == 0 ? Rigth : Left,
                 //Pop a value; move down if value=0, up otherwise
-                '|' => (int)Out.Pop() == 0 ? Up : Down,
+                '|' => Out.Pop() == 0 ? Up : Down,
                 //Bridge: Skip next cell
                 '#' => Skip,
                 _ => throw new Exception()
@@ -228,7 +228,7 @@ namespace Befunge_Interpreter
             int a;
             int b;
 
-            a = (int)Out.Pop();
+            a = Out.Pop();
             if (Out.Count == 0)
             {
                 Out.Push(0);
@@ -236,7 +236,7 @@ namespace Befunge_Interpreter
             }
             else
             {
-                b = (int)Out.Pop();
+                b = Out.Pop();
                 Out.Push(a);
                 Out.Push(b);
             }
@@ -247,7 +247,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void Addition()
         {
-            Out.Push((int)Out.Pop() + (int)Out.Pop());
+            Out.Push(Out.Pop() + Out.Pop());
         }
 
         /// <summary>
@@ -255,8 +255,8 @@ namespace Befunge_Interpreter
         /// </summary>
         void Subtraction()
         {
-            int a = (int)Out.Pop();
-            int b = (int)Out.Pop();
+            int a = Out.Pop();
+            int b = Out.Pop();
             Out.Push(b - a);
 
         }
@@ -266,7 +266,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void Multiplication()
         {
-            Out.Push((int)Out.Pop() * (int)Out.Pop());
+            Out.Push(Out.Pop() * Out.Pop());
         }
 
         /// <summary>
@@ -274,8 +274,8 @@ namespace Befunge_Interpreter
         /// </summary>
         void Division()
         {
-            int a = (int)Out.Pop();
-            int b = (int)Out.Pop();
+            int a = Out.Pop();
+            int b = Out.Pop();
             Out.Push(a == 0 ? 0 : b / a);
         }
 
@@ -284,8 +284,8 @@ namespace Befunge_Interpreter
         /// </summary>
         void Modulo()
         {
-            int a = (int)Out.Pop();
-            int b = (int)Out.Pop();
+            int a = Out.Pop();
+            int b = Out.Pop();
             Out.Push(a == 0 ? 0 : b % a);
         }
 
@@ -294,7 +294,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void LogicalNot()
         {
-            Out.Push((int)Out.Pop() == 0 ? 1 : 0);
+            Out.Push(Out.Pop() == 0 ? 1 : 0);
         }
 
         /// <summary>
@@ -302,8 +302,8 @@ namespace Befunge_Interpreter
         /// </summary>
         void GreaterThan()
         {
-            int a = (int)Out.Pop();
-            int b = (int)Out.Pop();
+            int a = Out.Pop();
+            int b = Out.Pop();
             Out.Push(b > a ? 1 : 0);
         }
 
