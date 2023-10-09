@@ -12,7 +12,8 @@ namespace Befunge_Interpreter
 
         public BefungeInterpreter()
         {
-            //TODO: Выровнять длину всез строк перед обработкой
+            //TODO: & - Запросить у пользователя число и поместить его в стек
+            //TODO: ~ - Запросить у пользователя символ и поместить в стек его ASCII - код
             Moving = Rigth;
             OutputStack = new();
             Row = 0;
@@ -36,7 +37,7 @@ namespace Befunge_Interpreter
         void Parse(string code)
         {
             _code = code;
-            _data = code.Split("\r\n").Select(i => i.ToCharArray()).ToArray();
+            _data = code.Split("\n").Select(i => i.ToCharArray()).ToArray();
         }
 
         /// <summary>
@@ -118,9 +119,9 @@ namespace Befunge_Interpreter
                 //Printing
                 '.' => PrintN,
                 ',' => PrintA,
-
+                //Other
                 ' ' => NoOperation,
-                _ =>  throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
+                _ => throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
             };
         }
 
@@ -129,7 +130,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void PrintN()
         {
-            Output.Append(OutputStack.Pop());            
+            Output.Append(OutputStack.Pop());
         }
 
         /// <summary>
@@ -304,7 +305,7 @@ namespace Befunge_Interpreter
         void Up()
         {
             Row--;
-            if(Row < 0)
+            if (Row < 0)
             {
                 Row = Data.Length - 1;
             }
@@ -313,7 +314,8 @@ namespace Befunge_Interpreter
         /// <summary>
         /// Start moving down
         /// </summary>
-        void Down() {
+        void Down()
+        {
             Row++;
             if (Row >= Data.Length)
             {
