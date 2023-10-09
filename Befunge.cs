@@ -37,7 +37,7 @@ namespace Befunge_Interpreter
         void Parse(string code)
         {
             _code = code;
-            _data = code.Split("\n").Select(i => i.ToCharArray()).ToArray();
+            _data = code.Split("\r\n").Select(i => i.ToCharArray()).ToArray();
         }
 
         /// <summary>
