@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 
@@ -8,12 +9,10 @@ namespace Befunge_Interpreter
     public class BefungeInterpreter
     {
         private char[][] _data;
-        string _code;
+        protected string _code;
 
         public BefungeInterpreter()
         {
-            //TODO: & - Запросить у пользователя число и поместить его в стек
-            //TODO: ~ - Запросить у пользователя символ и поместить в стек его ASCII - код
             Moving = Rigth;
             OutputStack = new();
             Row = 0;
@@ -60,12 +59,30 @@ namespace Befunge_Interpreter
                 if (item == '#')
                 {
                     Moving.Invoke();
-                    Moving.Invoke();
-                    item = Data[Row][Col];
+                    item = ' ';
                 }
             }
 
             return Output.ToString();
+        }
+
+        /// <summary>
+        /// Ask user for a number and push it
+        /// </summary>
+        void InputN()
+        {
+            string? input = Console.ReadLine();
+            if (Int32.TryParse(input.AsSpan()[0].ToString(), out int number))
+                OutputStack.Push(number);
+        }
+
+        /// <summary>
+        /// Ask user for a character and push its ASCII value
+        /// </summary>
+        void InputS()
+        {
+            string? input = Console.ReadLine();
+            OutputStack.Push((int)input.AsSpan()[0]);
         }
 
         /// <summary>
@@ -110,6 +127,8 @@ namespace Befunge_Interpreter
                 '!' => LogicalNot,
                 '`' => GreaterThan,
                 //Stack
+                '&' => InputN,
+                '~' => InputS,
                 ':' => Duplicate,
                 '$' => Discard,
                 '\\' => Swap,
@@ -118,11 +137,12 @@ namespace Befunge_Interpreter
                 'g' => Get,
                 //Printing
                 '.' => PrintN,
-                ',' => PrintA,
+                ',' => PrintS,
                 //Other
-                ' ' => NoOperation,
+                // No-op. Does nothing
+                ' ' => () => { },
                 _ => throw new Exception($"Not imposible read instruction in position {Row}, {Col} with value '{item}'")
-            };
+            }; ;
         }
 
         /// <summary>
@@ -136,7 +156,7 @@ namespace Befunge_Interpreter
         /// <summary>
         /// Pop value and output as ASCII character
         /// </summary>
-        void PrintA()
+        void PrintS()
         {
             Output.Append(Convert.ToChar(OutputStack.Pop()));
         }
@@ -196,14 +216,6 @@ namespace Befunge_Interpreter
         {
             int value = OutputStack.Count == 0 ? 0 : OutputStack.Peek();
             OutputStack.Push(value);
-        }
-
-        /// <summary>
-        /// No-op. Does nothing
-        /// </summary>
-        void NoOperation()
-        {
-            Output.Append(string.Empty);
         }
 
         /// <summary>
