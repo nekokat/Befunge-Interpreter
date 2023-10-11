@@ -105,7 +105,7 @@ namespace Befunge_Interpreter
             }
             else if ("><^v?_|".Contains(item))
             {
-                SetMove(item);
+                Move(item);
             }
             else
             {
@@ -166,7 +166,7 @@ namespace Befunge_Interpreter
         /// </summary>
         /// <param name="item"></param>
         /// <exception cref="Exception"></exception>
-        void SetMove(char item)
+        void Move(char item)
         {
             Moving = item switch
             {
