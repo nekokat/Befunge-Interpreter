@@ -9,11 +9,9 @@ namespace Befunge_Interpreter
     public class BefungeInterpreter
     {
         private char[][] _data;
-        //protected string _code;
+        protected string _code;
 
-#pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Возможно, стоит объявить поле как допускающее значения NULL.
         public BefungeInterpreter()
-#pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Возможно, стоит объявить поле как допускающее значения NULL.
         {
             Moving = Rigth;
             OutputStack = new Stack<int>();
@@ -37,7 +35,7 @@ namespace Befunge_Interpreter
         /// <param name="code">executable instructions</param>
         void Parse(string code)
         {
-            //_code = code;
+            _code = code;
             _data = code.Split("\r\n").Select(i => i.AsSpan().ToArray()).ToArray();
         }
 
