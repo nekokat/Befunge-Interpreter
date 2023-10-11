@@ -252,7 +252,6 @@ namespace Befunge_Interpreter
             int a = OutputStack.Pop();
             int b = OutputStack.Pop();
             OutputStack.Push(b - a);
-
         }
 
         /// <summary>
@@ -349,7 +348,6 @@ namespace Befunge_Interpreter
             {
                 Col = 0;
             }
-
         }
     }
 }
