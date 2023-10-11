@@ -9,16 +9,18 @@ namespace Befunge_Interpreter
     public class BefungeInterpreter
     {
         private char[][] _data;
-        protected string _code;
+        //protected string _code;
 
+#pragma warning disable CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Возможно, стоит объявить поле как допускающее значения NULL.
         public BefungeInterpreter()
+#pragma warning restore CS8618 // Поле, не допускающее значения NULL, должно содержать значение, отличное от NULL, при выходе из конструктора. Возможно, стоит объявить поле как допускающее значения NULL.
         {
             Moving = Rigth;
-            OutputStack = new();
+            OutputStack = new Stack<int>();
             Row = 0;
             Col = 0;
             ASCIIMode = false;
-            Output = new();
+            Output = new ();
         }
 
         StringBuilder Output { get; set; }
@@ -35,7 +37,7 @@ namespace Befunge_Interpreter
         /// <param name="code">executable instructions</param>
         void Parse(string code)
         {
-            _code = code;
+            //_code = code;
             _data = code.Split("\r\n").Select(i => i.AsSpan().ToArray()).ToArray();
         }
 
@@ -191,10 +193,12 @@ namespace Befunge_Interpreter
         /// </summary>
         void Put()
         {
+            /*
             int y = OutputStack.Pop();
             int x = OutputStack.Pop();
             int v = OutputStack.Pop();
-            Data[y][x] = Convert.ToChar(v);
+            */
+            Data[OutputStack.Pop()][OutputStack.Pop()] = Convert.ToChar(OutputStack.Pop());
         }
 
         /// <summary>
@@ -203,10 +207,12 @@ namespace Befunge_Interpreter
         /// </summary>
         void Get()
         {
+            /*
             int y = OutputStack.Pop();
             int x = OutputStack.Pop();
-            char v = Data[y][x];
-            OutputStack.Push((int)v);
+            char v = Data[OutputStack.Pop()][OutputStack.Pop()];
+            */
+            OutputStack.Push((int)Data[OutputStack.Pop()][OutputStack.Pop()]);
         }
 
         /// <summary>
@@ -214,8 +220,8 @@ namespace Befunge_Interpreter
         /// </summary>
         void Duplicate()
         {
-            int value = OutputStack.Count == 0 ? 0 : OutputStack.Peek();
-            OutputStack.Push(value);
+            //int value = OutputStack.Count == 0 ? 0 : OutputStack.Peek();
+            OutputStack.Push(OutputStack.Count == 0 ? 0 : OutputStack.Peek());
         }
 
         /// <summary>
@@ -239,9 +245,9 @@ namespace Befunge_Interpreter
         /// </summary>
         void Addition()
         {
-            int a = OutputStack.Pop();
-            int b = OutputStack.Pop();
-            OutputStack.Push(a + b);
+            //int a = OutputStack.Pop();
+            //int b = OutputStack.Pop();
+            OutputStack.Push(OutputStack.Pop() + OutputStack.Pop());
         }
 
         /// <summary>
@@ -250,8 +256,8 @@ namespace Befunge_Interpreter
         void Subtraction()
         {
             int a = OutputStack.Pop();
-            int b = OutputStack.Pop();
-            OutputStack.Push(b - a);
+            //int b = OutputStack.Pop();
+            OutputStack.Push(OutputStack.Pop() - a);
         }
 
         /// <summary>
@@ -259,9 +265,9 @@ namespace Befunge_Interpreter
         /// </summary>
         void Multiplication()
         {
-            int a = OutputStack.Pop();
-            int b = OutputStack.Pop();
-            OutputStack.Push(a * b);
+            //int a = OutputStack.Pop();
+            //int b = OutputStack.Pop();
+            OutputStack.Push(OutputStack.Pop() * OutputStack.Pop());
         }
 
         /// <summary>
@@ -270,8 +276,7 @@ namespace Befunge_Interpreter
         void Division()
         {
             int a = OutputStack.Pop();
-            int b = OutputStack.Pop();
-            OutputStack.Push(a == 0 ? 0 : b / a);
+            OutputStack.Push(a == 0 ? 0 : OutputStack.Pop() / a);
         }
 
         /// <summary>
@@ -280,8 +285,8 @@ namespace Befunge_Interpreter
         void Modulo()
         {
             int a = OutputStack.Pop();
-            int b = OutputStack.Pop();
-            OutputStack.Push(a == 0 ? 0 : b % a);
+            //int b = OutputStack.Pop();
+            OutputStack.Push(a == 0 ? 0 : OutputStack.Pop() % a);
         }
 
         /// <summary>
@@ -298,8 +303,8 @@ namespace Befunge_Interpreter
         void GreaterThan()
         {
             int a = OutputStack.Pop();
-            int b = OutputStack.Pop();
-            OutputStack.Push(b > a ? 1 : 0);
+            //int b = OutputStack.Pop();
+            OutputStack.Push(OutputStack.Pop() > a ? 1 : 0);
         }
 
         /// <summary>
@@ -307,8 +312,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void Up()
         {
-            Row--;
-            if (Row < 0)
+            if (--Row < 0)
             {
                 Row = Data.Length - 1;
             }
@@ -319,8 +323,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void Down()
         {
-            Row++;
-            if (Row >= Data.Length)
+            if (++Row >= Data.Length)
             {
                 Row = 0;
             }
@@ -331,8 +334,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void Left()
         {
-            Col--;
-            if (Col < 0)
+            if (--Col < 0)
             {
                 Col = Data[Row].Length - 1;
             }
@@ -343,8 +345,7 @@ namespace Befunge_Interpreter
         /// </summary>
         void Rigth()
         {
-            Col++;
-            if (Col >= Data[Row].Length)
+            if (++Col >= Data[Row].Length)
             {
                 Col = 0;
             }
