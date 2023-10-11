@@ -36,7 +36,7 @@ namespace Befunge_Interpreter
         void Parse(string code)
         {
             _code = code;
-            _data = code.Split("\r\n").Select(i => i.ToCharArray()).ToArray();
+            _data = code.Split("\r\n").Select(i => i.AsSpan().ToArray()).ToArray();
         }
 
         /// <summary>
@@ -229,17 +229,9 @@ namespace Befunge_Interpreter
         void Swap()
         {
             int a = OutputStack.Pop();
-            if (OutputStack.Count == 0)
-            {
-                OutputStack.Push(0);
-                OutputStack.Push(a);
-            }
-            else
-            {
-                int b = OutputStack.Pop();
-                OutputStack.Push(a);
-                OutputStack.Push(b);
-            }
+            int? b = OutputStack.Count == 0 ? null : OutputStack.Pop();
+            OutputStack.Push(b is null ? 0 : a);
+            OutputStack.Push(b ?? a);
         }
 
         /// <summary>
