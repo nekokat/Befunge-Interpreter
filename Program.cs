@@ -5,6 +5,7 @@ class Program
 {
     static void Main(string[] args)
     {
+        //TODO: https://learn.microsoft.com/ru-ru/dotnet/standard/commandline/define-commands#define-options
         using (StreamWriter sw = new("befunge_output.txt"))
         {
             BefungeInterpreter bi = new();

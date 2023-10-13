@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Befunge_Interpreter
 {
     public class BefungeInterpreter
     {
         private char[][] _data;
-        protected string _code;
 
         public BefungeInterpreter()
         {
@@ -35,8 +35,8 @@ namespace Befunge_Interpreter
         /// <param name="code">executable instructions</param>
         void Parse(string code)
         {
-            _code = code;
-            _data = code.Split("\r\n").Select(i => i.AsSpan().ToArray()).ToArray();
+            Regex rgx = new(@"\r?\n");
+            _data = rgx.Split(code).Select(i => i.AsSpan().ToArray()).ToArray();
         }
 
         /// <summary>
