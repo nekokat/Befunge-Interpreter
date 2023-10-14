@@ -9,4 +9,8 @@
     <Platforms>AnyCPU;ARM32;ARM64;x86;x64</Platforms>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CLI\CLI.csproj" />
+  </ItemGroup>
+
 </Project>
