@@ -16,8 +16,7 @@ class Program
             var bi = new BefungeInterpreter();
             string code = parameters.Input;
             sw.Write(bi.Interpret(code));
-        }
-        
+        }        
     }
 }
 
