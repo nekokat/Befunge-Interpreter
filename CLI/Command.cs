@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Befunge_Interpreter.CLI
 {
-    abstract record Command
+    public abstract record Command
     {
     }
 }

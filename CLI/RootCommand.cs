@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Befunge_Interpreter.CLI
 {
-    public class RootCommand
+    public record RootCommand : Command
     {
     }
 }
