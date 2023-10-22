@@ -13,8 +13,10 @@ namespace Befunge_Interpreter.CLI
             Groups = new();
         }
 
-        Dictionary<string, List<Action>> Groups { get; set; }
+        Dictionary<string, Group> Groups { get; set; }
         Dictionary<string, Action> Aliases { get; set; }
         Dictionary<string, List<Action>> Group { get; set; }
+
+
     }
 }
