@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Befunge_Interpreter.CLI
 {
-    public struct Group
+    public class Group
     {
         public string[] Data { get => Actions.Keys.ToArray(); }
         Dictionary<string, Action> Actions { get; set; }
@@ -23,7 +23,6 @@ namespace Befunge_Interpreter.CLI
 
         public Group(string name, Dictionary<string, Action> data) : this(name)
         {
-            Name = name;
             Actions = data;
         }
 
