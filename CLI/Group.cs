@@ -11,10 +11,10 @@ namespace Befunge_Interpreter.CLI
     public class Group
     {
         public string[] Data { get => Actions.Keys.ToArray(); }
-        Dictionary<string, Action> Actions { get; set; }
+        public Dictionary<string, Action> Actions { get; set; }
         public string Description { get; set; }
 
-        string Name { get; set; }
+        public string Name { get; set; }
 
         public Group(string name) : this()
         {
