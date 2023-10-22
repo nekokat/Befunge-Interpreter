@@ -33,7 +33,12 @@ namespace Befunge_Interpreter.CLI
             Description = string.Empty;
         }
 
-        void Add(string name, Action func)
+        public Group(string name, string description) : this(name, new Dictionary<string, Action>())
+        {
+            Description = description;
+        }
+
+        public void Add(string name, Action func)
         {
             Actions.Add(name, func);
         }
