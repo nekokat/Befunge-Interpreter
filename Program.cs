@@ -13,8 +13,11 @@ class Program
         Group readgrp = new()
         {
             Name = "read",
-            Description = "Read data from file",
-            Actions = new()
+            Description = "Read from",
+            Actions = new() {
+                { "--file", () => { } },
+                { "--string", () => { } }
+            }
         };
 
         cli.Add(readgrp);
