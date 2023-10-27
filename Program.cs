@@ -15,8 +15,8 @@ class Program
             Name = "read",
             Description = "Read from",
             Actions = new() {
-                { "--file", () => { } },
-                { "--string", () => { } }
+                { "--file", new Command("ReadFromFile", "Read data from file"){ Actions = () => { }, Aliases = new string[]{ "-f", "/f"} } },
+                { "--string", new Command("ReadFromString", "Read data from string"){ Actions = () => { }, Aliases = new string[]{ "-s", "/s"} } }
             }
         };
 

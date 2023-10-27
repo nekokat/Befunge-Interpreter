@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace Befunge_Interpreter.CLI
 {
-    public abstract record Command
+    public record Command(string Name, string Description)
     {
+        public string Name { get; init; } = Name;
+        public string Description { get; init; } = Description;
+
+        public Action Actions { get; init; }
+
+        public string[] Aliases { get; init; }
+
     }
 }

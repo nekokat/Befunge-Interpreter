@@ -11,7 +11,7 @@ namespace Befunge_Interpreter.CLI
     public class Group
     {
         public string[] Data { get => Actions.Keys.ToArray(); }
-        public Dictionary<string, Action> Actions { get; set; }
+        public Dictionary<string, Command> Actions { get; set; }
         public string Description { get; set; }
 
         public string Name { get; set; }
@@ -21,7 +21,7 @@ namespace Befunge_Interpreter.CLI
             Name = name;
         }
 
-        public Group(string name, Dictionary<string, Action> data) : this(name)
+        public Group(string name, Dictionary<string, Command> data) : this(name)
         {
             Actions = data;
         }
@@ -33,12 +33,12 @@ namespace Befunge_Interpreter.CLI
             Description = string.Empty;
         }
 
-        public Group(string name, string description) : this(name, new Dictionary<string, Action>())
+        public Group(string name, string description) : this(name, new Dictionary<string, Command>())
         {
             Description = description;
         }
 
-        public void Add(string name, Action func)
+        public void Add(string name, Command func)
         {
             Actions.Add(name, func);
         }
