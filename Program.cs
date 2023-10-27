@@ -17,7 +17,6 @@ class Program
             Description = "Read from",
             Actions = new() {
                 { "--file", new Command("--file", "Read data from file"){ Actions = () => { }, Aliases = new string[]{ "-f", "/f"} } },
-                { "--path", new Command("--path", "file path"){ Actions = () => { }, Aliases = new string[]{ "-p", "/p"} } },
                 { "--string", new Command("--string", "Read data from string"){ Actions = () => { }, Aliases = new string[]{ "-s", "/s"} } }
             }
         };
@@ -28,7 +27,6 @@ class Program
             Description = "Output to",
             Actions = new() {
                 { "--output", new Command("--output", "Output data to file"){ Actions = () => { }, Aliases = new string[]{ "-o", "/o"} } },
-                { "--path", new Command("--path", "file path"){ Actions = () => { }, Aliases = new string[]{ "-p", "/p"} } },
                 { "--terminal", new Command("--string", "Output data in terminal"){ Actions = () => { }, Aliases = new string[]{ "-t", "/t"} } }
             }
         };
