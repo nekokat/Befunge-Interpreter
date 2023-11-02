@@ -22,6 +22,7 @@ namespace Befunge_Interpreter.CLI
         Dictionary<string, Action> Aliases { get; set; }
         Dictionary<string, List<Action>> Group { get; set; }
 
+        void ToString() { }
 
     }
 }
