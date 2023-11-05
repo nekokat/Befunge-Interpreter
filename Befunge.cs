@@ -37,7 +37,7 @@ namespace Befunge_Interpreter
         {
             Regex rgx = new(@"\r?\n");
             int stringMaxLength = rgx.Split(code).Select(i => i.Length).Max();
-            _data = rgx.Split(code).Select(i => i + new string(' ', stringMaxLength - i.Length)).Select(i => i.AsSpan().ToArray()).ToArray();
+            _data = rgx.Split(code).Select(i => i + new string(' ', stringMaxLength - i.Length)).Select(i => i.ToArray()).ToArray();
             //_data = rgx.Split(code).Select(i => i.ToArray()).ToArray();
         }
 

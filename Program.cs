@@ -49,11 +49,18 @@ class Program
             Description = "Output to file oe terminal"
         };
 
+        Command cHelp = new("--help", "print Help")
+        {
+            Exec = () => { },
+            Alias = new string[] { "-h", "?" }
+        };
+
         outgrp.Add(cTerminal);
         outgrp.Add(cOutput);
 
         cli.Add(readgrp);
         cli.Add(outgrp);
+        cli.Add(cHelp);
 
         //TODO: https://learn.microsoft.com/ru-ru/dotnet/standard/commandline/define-commands#define-options
 

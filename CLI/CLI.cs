@@ -18,11 +18,23 @@ namespace Befunge_Interpreter.CLI
             Groups.Add(data.Name, data);
         }
 
+        public void Add(Command data)
+        {
+            Commands.Add(data);
+        }
+
+        public void Add(Command[] data)
+        {
+            Commands.AddRange(data);
+        }
+
+        List<Command> Commands { get; set; }
+
         Dictionary<string, Group> Groups { get; set; }
         Dictionary<string, Action> Aliases { get; set; }
         Dictionary<string, List<Action>> Group { get; set; }
 
-        void ToString() { }
+        static string ToString() { return string.Empty; }
 
     }
 }

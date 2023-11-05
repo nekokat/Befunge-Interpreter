@@ -6,18 +6,14 @@ using System.Threading.Tasks;
 
 namespace Befunge_Interpreter.CLI
 {
-    public class Help
+    public record Help(string Name, string Description)
     {
-        public Help(CLI data)
-        {
-            List = data;
-        }
+        public string Name { get; init; } = Name;
+        public string Description { get; init; } = Description;
 
-        CLI List { get; set; }
+        public Action Exec { get; init; }
 
-        void ToString()
-        {
-            List.ToString();
-        }
+        public string[] Alias { get; init; }
     }
+
 }
