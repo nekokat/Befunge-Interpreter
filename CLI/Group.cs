@@ -42,5 +42,10 @@ namespace Befunge_Interpreter.CLI
         {
             Actions.Add(name, func);
         }
+
+        public void Add(Command func)
+        {
+            Actions.Add(func.Name, func);
+        }
     }
 }

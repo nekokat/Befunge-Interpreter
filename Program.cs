@@ -11,25 +11,46 @@ class Program
         Console.WriteLine(string.Join(" ; ", args));
         CLI cli = new();
 
+        Command cFile = new("--file", "Read data from file") {
+            Exec = () => { },
+            Alias = new string[] { "-f", "/f" } 
+        };
+
+        Command cString = new("--string", "Read data from string")
+        {
+            Exec = () => { },
+            Alias = new string[] { "-s", "/s" }
+        };
+
         Group readgrp = new()
         {
             Name = "read",
-            Description = "Read from",
-            Actions = new() {
-                { "--file", new Command("--file", "Read data from file"){ Actions = () => { }, Aliases = new string[]{ "-f", "/f"} } },
-                { "--string", new Command("--string", "Read data from string"){ Actions = () => { }, Aliases = new string[]{ "-s", "/s"} } }
-            }
+            Description = "Read from"
+        };
+
+        readgrp.Add(cFile);
+        readgrp.Add(cString);
+
+        Command cOutput = new("--output", "Output data to file")
+        {
+            Exec = () => { },
+            Alias = new string[] { "-o", "/o" }
+        };
+
+        Command cTerminal = new("--string", "Output data in terminal")
+        {
+            Exec = () => { },
+            Alias = new string[] { "-t", "/t" }
         };
 
         Group outgrp = new()
         {
             Name = "Output",
-            Description = "Output to",
-            Actions = new() {
-                { "--output", new Command("--output", "Output data to file"){ Actions = () => { }, Aliases = new string[]{ "-o", "/o"} } },
-                { "--terminal", new Command("--string", "Output data in terminal"){ Actions = () => { }, Aliases = new string[]{ "-t", "/t"} } }
-            }
+            Description = "Output to file oe terminal"
         };
+
+        outgrp.Add(cTerminal);
+        outgrp.Add(cOutput);
 
         cli.Add(readgrp);
         cli.Add(outgrp);
