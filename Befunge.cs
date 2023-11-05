@@ -36,7 +36,9 @@ namespace Befunge_Interpreter
         void Parse(string code)
         {
             Regex rgx = new(@"\r?\n");
-            _data = rgx.Split(code).Select(i => i.AsSpan().ToArray()).ToArray();
+            int stringMaxLength = rgx.Split(code).Select(i => i.Length).Max();
+            _data = rgx.Split(code).Select(i => i + new string(' ', stringMaxLength - i.Length)).Select(i => i.AsSpan().ToArray()).ToArray();
+            //_data = rgx.Split(code).Select(i => i.ToArray()).ToArray();
         }
 
         /// <summary>
