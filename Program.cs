@@ -48,7 +48,7 @@ class Program
             Description = "Output to file or terminal"
         };
 
-        Command cHelp = new("--help", "print Help")
+        Command cHelp = new("--help", "Show this help information and exit")
         {
             Exec = () => { },
             Alias = new string[] { "-h", "-H", "-?" }
@@ -59,12 +59,17 @@ class Program
             Exec = () => { },
             Alias = new string[] { "-v", "-V" }
         };
+
         outgrp.Add(cTerminal);
         outgrp.Add(cOutput);
         
         cli.Add(readgrp);
         cli.Add(outgrp);
         //cli.Add(cHelp);
+        //cli.Add(cVersion);
+
+        Console.WriteLine(readgrp);
+        Console.WriteLine(outgrp);
 
         //TODO: https://learn.microsoft.com/ru-ru/dotnet/standard/commandline/define-commands#define-options
 

@@ -52,7 +52,7 @@ namespace Befunge_Interpreter.CLI
         public override string ToString()
         {
             string actions = string.Join("\n", Actions.Values);
-            return $"Group: {Name} ({Description})\n{actions}";
+            return $"{Name} ({Description}):\n{actions}";
         }
     }
 }
