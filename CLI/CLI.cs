@@ -34,7 +34,7 @@ namespace Befunge_Interpreter.CLI
         Dictionary<string, Action> Aliases { get; set; }
         Dictionary<string, List<Action>> Group { get; set; }
 
-        static string ToString() { return string.Empty; }
+        public override string ToString() { return string.Empty; }
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,12 @@ namespace Befunge_Interpreter.CLI
         public void Add(Command func)
         {
             Actions.Add(func.Name, func);
+        }
+
+        public override string ToString()
+        {
+            string actions = string.Join("\n", Actions.Values);
+            return $"Group: {Name} ({Description})\n{actions}";
         }
     }
 }

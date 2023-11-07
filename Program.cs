@@ -24,7 +24,7 @@ class Program
 
         Group readgrp = new()
         {
-            Name = "read",
+            Name = "Read",
             Description = "Read from"
         };
 
@@ -46,7 +46,7 @@ class Program
         Group outgrp = new()
         {
             Name = "Output",
-            Description = "Output to file oe terminal"
+            Description = "Output to file or terminal"
         };
 
         Command cHelp = new("--help", "print Help")
@@ -57,10 +57,10 @@ class Program
 
         outgrp.Add(cTerminal);
         outgrp.Add(cOutput);
-
+        
         cli.Add(readgrp);
         cli.Add(outgrp);
-        cli.Add(cHelp);
+        //cli.Add(cHelp);
 
         //TODO: https://learn.microsoft.com/ru-ru/dotnet/standard/commandline/define-commands#define-options
 
