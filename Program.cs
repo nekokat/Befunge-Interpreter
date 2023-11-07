@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Befunge_Interpreter;
 using Befunge_Interpreter.CLI;
 
@@ -52,9 +51,14 @@ class Program
         Command cHelp = new("--help", "print Help")
         {
             Exec = () => { },
-            Alias = new string[] { "-h", "?" }
+            Alias = new string[] { "-h", "-H", "-?" }
         };
 
+        Command cVersion = new("--version", "Print version information and exit")
+        {
+            Exec = () => { },
+            Alias = new string[] { "-v", "-V" }
+        };
         outgrp.Add(cTerminal);
         outgrp.Add(cOutput);
         
