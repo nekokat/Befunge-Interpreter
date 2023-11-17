@@ -8,6 +8,7 @@ namespace Befunge_Interpreter.CLI
 {
     public record Command(string Name, string Description)
     {
+        //FIXME
         public string Name { get; init; } = Name;
         public string Description { get; init; } = Description;
 
