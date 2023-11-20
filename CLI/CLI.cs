@@ -8,7 +8,7 @@ namespace Befunge_Interpreter.CLI
 {
     public class CLI
     {
-        //FIXME
+        //FIXME: REWRITE 
         public CLI()
         {
             Groups = new();
