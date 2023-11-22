@@ -6,15 +6,21 @@ using System.Threading.Tasks;
 
 namespace Befunge_Interpreter.CLI
 {
-    public record Help(string Name, string Description)
+    public class Help
     {
-        //FIXME
-        public string Name { get; init; } = Name;
-        public string Description { get; init; } = Description;
+        private readonly CLI _data;
+        private string _help;
 
-        public Action Exec { get; init; }
+        public Help(CLI data){ _data = data; }
 
-        public string[] Alias { get; init; }
+        void Generate()
+        {
+            _help = _data.ToString();
+        }
+
+        public string Data => _help;
+        public string Version { get; set; }
+
     }
 
 }

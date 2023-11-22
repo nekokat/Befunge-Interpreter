@@ -65,10 +65,11 @@ class Program
         
         cli.Add(readgrp);
         cli.Add(outgrp);
+
         //cli.Add(cHelp);
         //cli.Add(cVersion);
 
-        Console.WriteLine(readgrp);
+        Console.WriteLine(cVersion);
         Console.WriteLine(outgrp);
 
         //TODO: https://learn.microsoft.com/ru-ru/dotnet/standard/commandline/define-commands#define-options

@@ -31,6 +31,8 @@ namespace Befunge_Interpreter.CLI
 
         List<Command> Commands { get; set; }
 
+        Help Help { get; set; }
+
         Dictionary<string, Group> Groups { get; set; }
         Dictionary<string, Action> Aliases { get; set; }
         Dictionary<string, List<Action>> Group { get; set; }
