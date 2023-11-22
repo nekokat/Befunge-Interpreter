@@ -31,11 +31,14 @@ namespace Befunge_Interpreter.CLI
 
         List<Command> Commands { get; set; }
 
-        Help Help { get; set; }
+        public Help Help { get; set; }
+
+        public Parse Parse { get; set; } = new Parse();
 
         Dictionary<string, Group> Groups { get; set; }
-        Dictionary<string, Action> Aliases { get; set; }
-        Dictionary<string, List<Action>> Group { get; set; }
+
+        //Dictionary<string, Action> Aliases { get; set; }
+        //Dictionary<string, List<Action>> Group { get; set; }
 
         public override string ToString() { return string.Empty; }
 

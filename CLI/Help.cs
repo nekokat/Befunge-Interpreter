@@ -11,12 +11,19 @@ namespace Befunge_Interpreter.CLI
         private readonly CLI _data;
         private string _help;
 
-        public Help(CLI data){ _data = data; }
+        public Help(){}
+
+        public Help(CLI data) : this()
+        {
+            _data = data;
+        }
 
         void Generate()
         {
             _help = _data.ToString();
         }
+
+        List<Command> Commands { get; set; } = new List<Command>();
 
         public string Data => _help;
         public string Version { get; set; }
