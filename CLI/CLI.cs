@@ -12,6 +12,7 @@ namespace Befunge_Interpreter.CLI
         public CLI()
         {
             Groups = new();
+            Help = new Help(Commands, Groups);
         }
 
         public void Add(Group data)
@@ -29,13 +30,13 @@ namespace Befunge_Interpreter.CLI
             Commands.AddRange(data);
         }
 
-        List<Command> Commands { get; set; }
+        protected List<Command> Commands { get; set; } = new List<Command>();
+        protected Dictionary<string, Group> Groups { get; set; }
 
         public Help Help { get; set; }
 
         public Parse Parse { get; set; } = new Parse();
 
-        Dictionary<string, Group> Groups { get; set; }
 
         //Dictionary<string, Action> Aliases { get; set; }
         //Dictionary<string, List<Action>> Group { get; set; }

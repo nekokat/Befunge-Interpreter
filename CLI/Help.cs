@@ -8,24 +8,21 @@ namespace Befunge_Interpreter.CLI
 {
     public class Help
     {
-        private readonly CLI _data;
-        private string _help;
+        private readonly List<Command> _commands;
+        private readonly Dictionary<string, Group> _group;
 
         public Help(){}
 
-        public Help(CLI data) : this()
+        public Help(List<Command> commands, Dictionary<string, Group> group)
         {
-            _data = data;
+            _commands = commands;
+            _group = group;
         }
 
         void Generate()
         {
-            _help = _data.ToString();
         }
 
-        List<Command> Commands { get; set; } = new List<Command>();
-
-        public string Data => _help;
         public string Version { get; set; }
 
     }
