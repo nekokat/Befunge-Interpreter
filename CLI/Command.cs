@@ -16,7 +16,9 @@ namespace Befunge_Interpreter.CLI
 
         public string[] Alias { get; init; }
 
-        public override string ToString() => $"  {Name}, {string.Join(", ", Alias)}            {Description}";
-      
+        public override string ToString()
+        {
+            return $"  {Name}, {string.Join(", ", Alias)}            {Description}";
+        }
     }
 }
