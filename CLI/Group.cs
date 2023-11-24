@@ -51,8 +51,8 @@ namespace Befunge_Interpreter.CLI
 
         public override string ToString()
         {
-            string actions = string.Join("\n", Actions.Values);
-            return $"{Name} ({Description}):\n{actions}\n";
+            string actions = string.Join(string.Empty, Actions.Values);
+            return $"\n{Name} ({Description}):\n{actions}";
         }
     }
 }

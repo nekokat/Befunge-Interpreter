@@ -30,6 +30,14 @@ namespace Befunge_Interpreter.CLI
             Commands.AddRange(data);
         }
 
+        public void Add(Group[] data)
+        {
+            foreach( Group item in data)
+            {
+                this.Add(item);
+            }
+        }
+
         protected List<Command> Commands { get; set; } = new List<Command>();
         protected Dictionary<string, Group> Groups { get; set; }
 

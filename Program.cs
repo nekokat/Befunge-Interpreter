@@ -6,7 +6,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        //var parameters = new Parsing(args);
+        //var parameters = new Parse(args);
         //Console.WriteLine(string.Join(" ; ", args));
         CLI cli = new();
 
@@ -62,15 +62,12 @@ class Program
 
         outgrp.Add(cTerminal);
         outgrp.Add(cOutput);
-        
-        cli.Add(readgrp);
-        cli.Add(outgrp);
 
-        //cli.Add(cHelp);
-        //cli.Add(cVersion);
+        cli.Add(new Command[] { cHelp, cVersion });
 
-        Console.WriteLine(cVersion);
-        Console.WriteLine(outgrp);
+        cli.Add(new Group[] { readgrp, outgrp });
+
+        Console.WriteLine(cli.Help);
 
         //TODO: https://learn.microsoft.com/ru-ru/dotnet/standard/commandline/define-commands#define-options
 
