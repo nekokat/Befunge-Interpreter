@@ -12,7 +12,7 @@ namespace Befunge_Interpreter.CLI
         public string Name { get; init; } = Name;
         public string Description { get; init; } = Description;
 
-        public Action Exec { get; init; }
+        public Action Exec { get; set; }
 
         public string[] Alias { get; init; }
 

@@ -12,7 +12,8 @@ namespace Befunge_Interpreter.CLI
         private List<Command> Commands { get; set; }
         private Dictionary<string, Group> Groups { get; set; }
 
-        public Help(){}
+        public Help()
+        {}
 
         public Help(List<Command> commands, Dictionary<string, Group> group)
         {
@@ -28,10 +29,7 @@ namespace Befunge_Interpreter.CLI
 
             Commands.ForEach(item => data.Append(item));
 
-            foreach (string item in Groups.Keys)
-            {
-                data.Append(Groups[item]);
-            }
+            Groups.Values.ToList().ForEach(item => data.Append(item));           
 
             Data = data.ToString();
         }

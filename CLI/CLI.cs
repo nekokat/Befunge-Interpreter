@@ -8,9 +8,11 @@ namespace Befunge_Interpreter.CLI
 {
     public class CLI
     {
-        //FIXME: REWRITE 
+        //FIXME: REWRITE
+        
         public CLI()
         {
+            Commands = new List<Command>();
             Groups = new();
             Help = new Help(Commands, Groups);
         }
@@ -38,7 +40,7 @@ namespace Befunge_Interpreter.CLI
             }
         }
 
-        protected List<Command> Commands { get; set; } = new List<Command>();
+        protected List<Command> Commands { get; set; }
         protected Dictionary<string, Group> Groups { get; set; }
 
         public Help Help { get; set; }
