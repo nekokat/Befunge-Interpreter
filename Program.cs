@@ -12,7 +12,7 @@ class Program
 
         Command cFile = new("--file", "Read data from file")
         {
-            Exec = () => OutputToFile,
+            Exec = () => { },
             Alias = new string[] { "-f", "/f" } 
         };
 
@@ -33,7 +33,7 @@ class Program
 
         Command cOutput = new("--output", "Output data to file")
         {
-            Exec = () => { },
+            Exec = OutputToFile,
             Alias = new string[] { "-o", "/o" }
         };
 
@@ -92,6 +92,7 @@ class Program
             }
         }
 
+        //cli.Groups["Read"].Actions["--file"].Exec.Invoke();
         OutputToFile();
 
     }

@@ -41,7 +41,9 @@ namespace Befunge_Interpreter.CLI
         }
 
         protected List<Command> Commands { get; set; }
-        protected Dictionary<string, Group> Groups { get; set; }
+
+        //FIXME
+        public Dictionary<string, Group> Groups { get; set; }
 
         public Help Help { get; set; }
 

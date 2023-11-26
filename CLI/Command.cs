@@ -9,10 +9,12 @@ namespace Befunge_Interpreter.CLI
     public record Command(string Name, string Description)
     {
         //FIXME
+        public delegate void Execute();
+
         public string Name { get; init; } = Name;
         public string Description { get; init; } = Description;
 
-        public Action Exec { get; set; }
+        public Execute Exec { get; init; }
 
         public string[] Alias { get; init; }
 
