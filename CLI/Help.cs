@@ -12,9 +12,6 @@ namespace Befunge_Interpreter.CLI
         private List<Command> Commands { get; set; }
         private Dictionary<string, Group> Groups { get; set; }
 
-        public Help()
-        {}
-
         public Help(List<Command> commands, Dictionary<string, Group> group)
         {
             Commands = commands;
