@@ -99,9 +99,8 @@ class Program
             string code = "022p25*\":ereh drow ruoy retnE\">,# :# _>~:25*-#v_v>22g1+:98+-#v_v\r\n                                      ^p3g22              p22<\r\n  0                                           >  ^\r\n***************** v                             <              <\r\n    0             >22g1+22p>22g1-:22p#v_25*,@\r\n     0\r\n                           ^               p 3g55\"*\",<\r\n                                      v                <\r\n                                        >:55p3g:\"*\"-#^_^\r\n\r\n                                      v ^  <\r\n                               >94+   #    ^\r\n                               v      <    ^\r\n                               #  >5*    > ^\r\n                                  2      6 ^\r\n                              v?vv?v# ?#v?7^\r\n                              999999  # 58 ^\r\n                              76532   >1   ^\r\n                              +++++  v?v   ^\r\n                                     234   ^\r\n                              >>>>>>>>>>>>>^";
             Console.WriteLine(bi.Interpret(code));
         }    
-        
-        //cli.Groups["Read"].Actions["--file"].Exec.Invoke();        
-        OutputToConsole();
+          
+        cTerminal.Exec.Invoke();
     }
 }
 
