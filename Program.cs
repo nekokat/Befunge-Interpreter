@@ -5,10 +5,11 @@ using Befunge_Interpreter.CLI;
 class Program
 {
     static void Main(string[] args)
-    {
-        //var parameters = new Parse(args);
-        //Console.WriteLine(string.Join(" ; ", args));
+    { 
         CLI cli = new();
+
+        //Parse parameters = new Parse(args);
+        //Console.WriteLine(string.Join(" ; ", args));
 
         Command cFile = new("--file", "Read data from file")
         {
