@@ -50,22 +50,8 @@ class Program
             Description = "Output to file or terminal"
         };
 
-        Command cHelp = new("--help", "Show this help information and exit")
-        {
-            Exec = () => { },
-            Alias = new string[] { "-h", "-H", "-?" }
-        };
-
-        Command cVersion = new("--version", "Print version information and exit")
-        {
-            Exec = () => { },
-            Alias = new string[] { "-v", "-V" }
-        };
-
         outgrp.Add(cTerminal);
         outgrp.Add(cOutput);
-
-        cli.Add(new Command[] { cHelp, cVersion });
 
         cli.Add(new Group[] { readgrp, outgrp });
 

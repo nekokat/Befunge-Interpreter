@@ -15,7 +15,24 @@ namespace Befunge_Interpreter.CLI
             Commands = new List<Command>();
             Groups = new();
             Help = new Help(Commands, Groups);
+
+            Command cHelp = new("--help", "Show this help information and exit")
+            {
+                Exec = () => Console.WriteLine(this.Help),
+                Alias = new string[] { "-h", "-H", "-?" }
+            };
+
+            Command cVersion = new("--version", "Print version information and exit")
+            {
+                Exec = () => Console.WriteLine(this.Version),
+                Alias = new string[] { "-v", "-V" }
+            };
+
+            this.Add(cHelp);
+            this.Add(cVersion);
         }
+
+        public string Version { get; set; }
 
         public void Add(Group data)
         {
