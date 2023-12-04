@@ -34,6 +34,8 @@ namespace Befunge_Interpreter.CLI
 
         public string Version { get; set; }
 
+        public Parse Parser { get; set; }
+
         public void Add(Group data)
         {
             Groups.Add(data.Name, data);
