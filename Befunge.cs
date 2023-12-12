@@ -7,10 +7,16 @@ using System.Text.RegularExpressions;
 
 namespace Befunge_Interpreter
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class BefungeInterpreter
     {
         private char[][] _data;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public BefungeInterpreter()
         {
             Moving = Rigth;
@@ -21,12 +27,39 @@ namespace Befunge_Interpreter
             Output = new ();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         StringBuilder Output { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         Action Moving { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public Stack<int> OutputStack { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         char[][] Data { get => _data; set => _data = value; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         int Row { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         int Col { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         bool ASCIIMode { get; set; }
 
         /// <summary>
@@ -115,6 +148,12 @@ namespace Befunge_Interpreter
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         Action Operator(char item)
         {
             return item switch

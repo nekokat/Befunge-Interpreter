@@ -4,6 +4,10 @@ using Befunge_Interpreter.CLI;
 
 class Program
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="args"></param>
     static void Main(string[] args)
     {
         CLI cli = new()
@@ -70,6 +74,7 @@ class Program
         }
         */
 
+        
         static void OutputToFile()
         {
             string filename = "output.txt";
