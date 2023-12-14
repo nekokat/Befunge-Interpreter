@@ -8,14 +8,14 @@ using System.Text.RegularExpressions;
 namespace Befunge_Interpreter
 {
     /// <summary>
-    /// 
+    /// Befunge Interpreter
     /// </summary>
     public class BefungeInterpreter
     {
         private char[][] _data;
 
         /// <summary>
-        /// 
+        /// Befunge Interpreter
         /// </summary>
         public BefungeInterpreter()
         {
@@ -28,7 +28,7 @@ namespace Befunge_Interpreter
         }
 
         /// <summary>
-        /// 
+        /// Collecting output to String
         /// </summary>
         StringBuilder Output { get; set; }
 
@@ -38,7 +38,7 @@ namespace Befunge_Interpreter
         Action Moving { get; set; }
 
         /// <summary>
-        /// 
+        /// Output Stack
         /// </summary>
         public Stack<int> OutputStack { get; set; }
 
@@ -48,17 +48,17 @@ namespace Befunge_Interpreter
         char[][] Data { get => _data; set => _data = value; }
 
         /// <summary>
-        /// 
+        /// Row position
         /// </summary>
         int Row { get; set; }
 
         /// <summary>
-        /// 
+        /// Column position
         /// </summary>
         int Col { get; set; }
 
         /// <summary>
-        /// 
+        /// ASCII Mode
         /// </summary>
         bool ASCIIMode { get; set; }
 
@@ -149,11 +149,11 @@ namespace Befunge_Interpreter
         }
 
         /// <summary>
-        /// 
+        /// Operator
         /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+        /// <param name="item">Symbolic representation of the operator</param>
+        /// <returns>Operator to Invoke</returns>
+        /// <exception cref="Exception">"Not imposible read instruction in position {Row}, {Col} with value '{item}'"</exception>
         Action Operator(char item)
         {
             return item switch

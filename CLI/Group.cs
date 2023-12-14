@@ -37,7 +37,7 @@ namespace Befunge_Interpreter.CLI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="name">Group name</param>
         public Group(string name) : this()
         {
             Name = name;
@@ -46,15 +46,15 @@ namespace Befunge_Interpreter.CLI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="data"></param>
+        /// <param name="name">Group name</param>
+        /// <param name="data">List of commands</param>
         public Group(string name, Dictionary<string, Command> data) : this(name)
         {
             Actions = data;
         }
 
         /// <summary>
-        /// 
+        /// Default сonstructor
         /// </summary>
         public Group()
         {
@@ -64,38 +64,38 @@ namespace Befunge_Interpreter.CLI
         }
 
         /// <summary>
-        /// 
+        /// Description of the group
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
+        /// <param name="name">Group name</param>
+        /// <param name="description">Text description of the group</param>
         public Group(string name, string description) : this(name, new Dictionary<string, Command>())
         {
             Description = description;
         }
 
         /// <summary>
-        /// 
+        /// Adds a Command to group with another name
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="func"></param>
+        /// <param name="name">Command name</param>
+        /// <param name="func">Command instance</param>
         public void Add(string name, Command func)
         {
             Actions.Add(name, func);
         }
 
         /// <summary>
-        /// 
+        /// Adds a Command to group
         /// </summary>
-        /// <param name="func"></param>
+        /// <param name="func">command instance</param>
         public void Add(Command func)
         {
             Actions.Add(func.Name, func);
         }
 
         /// <summary>
-        /// 
+        /// Show information about the group
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Displaying text information about the group</returns>
         public override string ToString()
         {
             string actions = string.Join(string.Empty, Actions.Values);
