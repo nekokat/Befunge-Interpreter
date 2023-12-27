@@ -15,7 +15,7 @@ namespace Befunge_Interpreter.CLI
     {
         //FIXME
         /// <summary>
-        /// 
+        /// Link to method for executing
         /// </summary>
         public delegate void Execute();
 
